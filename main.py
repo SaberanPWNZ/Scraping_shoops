@@ -39,8 +39,8 @@ for item in all_items.find_all('article'):
     #     writer = csv.DictWriter(file, fieldnames=fields_name)
     #     writer.writeheader()
     #     writer.writerow(card_item)
-    with open("Items.json", "a", encoding='UTF-8') as f:
-        json.dump(card_item, f, ensure_ascii=False)
+    with open("Items.json", "w", encoding='UTF-8') as f:
+        json.dump(item_list, f, ensure_ascii=False, indent=4)
 
 
 print(item_list)

@@ -1,7 +1,6 @@
 import requests
 
 
-
 class BaseStore:
     def __init__(self, url, headers=None, cookies=None):
         self.url = url
