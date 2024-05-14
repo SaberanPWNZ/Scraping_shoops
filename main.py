@@ -35,17 +35,11 @@ for item in all_items.find_all('article'):
 
 
     item_list.append(card_item)
-    # with open('foxtrot.csv', "a", encoding='UTF-8') as file:
-    #     writer = csv.DictWriter(file, fieldnames=fields_name)
-    #     writer.writeheader()
-    #     writer.writerow(card_item)
+
     with open("Items.json", "w", encoding='UTF-8') as f:
         json.dump(item_list, f, ensure_ascii=False, indent=4)
 
 
-print(item_list)
 
-# with open('Response.json', 'w', encoding='UTF-8') as file:
-#
-#     json_data = json.dumps(response.json(), ensure_ascii=False, indent=4)
-#     file.write(json_data)
+
+
