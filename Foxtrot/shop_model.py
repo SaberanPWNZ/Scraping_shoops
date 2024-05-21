@@ -1,0 +1,1 @@
+from Scraping_shoops.Classes.store import BaseStoreclass FoxtrotStore(BaseStore):    def __init__(self):        super().__init__(            url='https://www.foxtrot.com.ua/uk/shop/graficheskie_plansheti_wacom.html',        )
