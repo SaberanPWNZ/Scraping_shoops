@@ -23,6 +23,10 @@ class Item:
         self.price = price
         self.article = article
 
+    @classmethod
+    def from_tuple(cls, data_tuple):
+        return cls(*data_tuple)
+
 
 class Soup:
     def __init__(self, response):
