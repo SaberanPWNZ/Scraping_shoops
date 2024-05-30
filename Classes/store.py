@@ -28,6 +28,9 @@ class Item:
     def from_tuple(cls, db_tuple):
         return cls(db_tuple[0], db_tuple[1], db_tuple[2], db_tuple[3])
 
+    def strip_price(self, price:str):
+        return price.strip().replace(' ', '').replace(',00', '')
+
 
 class Soup:
     def __init__(self, response):

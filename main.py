@@ -1,6 +1,16 @@
-from config import HEADERS
-from utillities import get_article_from_title
-from Classes.store import BaseStore
+import schedule
+import datetime
 
-if __name__ == '_main_':
-    print("start")
+from Foxtrot.foxtrot import start_foxtrot
+
+
+def start_shops_checking():
+    schedule.every().minute.do(start_foxtrot)
+    print(datetime.datetime.now())
+
+
+if __name__ == '__main__':
+    start_shops_checking()
+
+    while True:
+        schedule.run_pending()
