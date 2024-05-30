@@ -4,13 +4,13 @@ from bs4 import BeautifulSoup
 
 
 class BaseStore:
-    def __init__(self, url, headers=None, cookies=None):
-        self.url = url
+    def __init__(self, shop_url, headers=None, cookies=None):
+        self.url = shop_url
         self.headers = headers
         self.cookies = cookies
 
-    def get(self):
-        response = requests.get(self.url, self.headers)
+    def get(self,shop_url):
+        response = requests.get(url=shop_url)
         return response
 
     def post(self):
