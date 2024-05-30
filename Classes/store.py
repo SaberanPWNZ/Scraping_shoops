@@ -15,7 +15,7 @@ class BaseStore:
 
     @staticmethod
     def get(self, shop_url):
-        response = requests.get(url=shop_url)
+        response = requests.get(url=shop_url, headers=self.headers)
         return response
 
     def post(self):
