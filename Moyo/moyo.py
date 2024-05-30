@@ -1,1 +1,1 @@
-from Foxtrot.foxtrot import compare_datafrom Moyo.moyo_model import MoyoStoredef start_moyo():    moyo = MoyoStore()    items = moyo.generate_info_from_moyo()    compare_data(items)
+from Foxtrot.foxtrot import compare_datafrom Moyo.moyo_model import MoyoStoredef start_moyo():    moyo = MoyoStore()    items = moyo.generate_info_from_moyo()    compare_data(items)    print(MoyoStore.__name__)
