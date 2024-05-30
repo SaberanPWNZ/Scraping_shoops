@@ -1,0 +1,1 @@
+from bs4 import BeautifulSoupclass Locator:    tag = None    selector = ''    find_block = (tag, selector)
