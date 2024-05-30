@@ -5,6 +5,7 @@ from Foxtrot.foxtrot import start_foxtrot
 
 
 def start_shops_checking():
+
     schedule.every().minute.do(start_foxtrot)
     print(datetime.datetime.now())
 
