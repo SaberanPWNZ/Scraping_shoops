@@ -1,0 +1,1 @@
+from Foxtrot.foxtrot import compare_datafrom KTC.ktc_model import KtcStoredef start_ktc():    ktc = KtcStore()    items = ktc.generate_info()    compare_data(items)    print(ktc.__str__())
