@@ -1,0 +1,1 @@
+from Classes.locator import Locator# class MoyoLocator(Locator):#     tag =
