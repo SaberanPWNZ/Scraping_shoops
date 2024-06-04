@@ -1,0 +1,1 @@
+from Click.click_model import ClickStoredef start_click():    click = ClickStore()    items = click.generate_info()    return click.compare_data(items)
