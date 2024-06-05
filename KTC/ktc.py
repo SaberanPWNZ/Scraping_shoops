@@ -1,1 +1,1 @@
-from Foxtrot.foxtrot import compare_datafrom KTC.ktc_model import KtcStoredef start_ktc():    ktc = KtcStore()    items = ktc.generate_info()    print(KtcStore.__name__)    return compare_data(items)
+from KTC.ktc_model import KtcStoredef start_ktc():    ktc = KtcStore()    items = ktc.generate_info()    return ktc.compare_data(items)

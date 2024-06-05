@@ -2,6 +2,7 @@ import requests
 import lxml
 from bs4 import BeautifulSoup
 
+from databases.parse_db import get_info_from_db
 from utillities import get_article_from_title, HEADERS
 
 
@@ -22,25 +23,38 @@ class BaseStore:
         return requests.post(self.url, self.headers)
 
 
-class Item:
-    def __init__(self, primary_key, article, title, price):
-        self.id = primary_key
-        self.article = article
-        self.title = title
-        self.price = price
+    def compare_data(self, partner_list):
+        items_from_db = list(get_info_from_db())
+        items_dict = {item.article: item for item in items_from_db}
 
-    @classmethod
-    def from_tuple(cls, db_tuple):
-        return cls(db_tuple[0], db_tuple[1], db_tuple[2], db_tuple[3])
+        missing_items = []
 
-    def strip_price(self, price: str):
-        return price.strip().replace(' ', '').replace(',00', '')
+        for elem in partner_list:
+            article = elem['article']
+            price_partner = int(elem['price'])
 
-    @classmethod
-    def get_article_from_title(self, title: str):
-        article = title.split('(')
-        article = article[1].replace(')', "")
-        return article
+            if article in items_dict:
+                item = items_dict[article]
+                item_price = int(item.price.decode('utf-8')) if isinstance(item.price, bytes) else int(item.price)
+                if price_partner == item_price:
+                    missing_items.append(f'✅{article} - Ціна партнера- {price_partner} грн, РРЦ {item_price} грн')
+
+                if price_partner < item_price:
+                    missing_items.append(
+                        f'🛑 Ціна нижча за РРЦ {article} - {price_partner} грн, Ціна РРЦ = {item_price} грн')
+
+                if price_partner > item_price:
+                    missing_items.append(
+                        f'⚠️ Ціна вища за РРЦ {article} - {price_partner} грн, Ціна РРЦ = {item_price} грн')
+
+            else:
+                # missing_items.append(article)
+                print(f'Article {article} not found in the database')
+
+        return missing_items
+
+
+
 
 
 class Soup:
