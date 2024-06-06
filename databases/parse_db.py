@@ -59,12 +59,11 @@ def insert_new_info(items_list):
         cursor.execute('''INSERT INTO WACOM(article, title, price)
         VALUES (?, ?, ?)''', (article, title, price))
 
-    conn.commit()  # Ensure changes are saved to the database
+    conn.commit() 
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Строим относительный путь к базе данных
 db_path = os.path.join(current_dir, 'Wacom.db')
 
 
