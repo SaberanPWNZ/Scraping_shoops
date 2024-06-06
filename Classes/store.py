@@ -22,7 +22,6 @@ class BaseStore:
     def post(self):
         return requests.post(self.url, self.headers)
 
-
     def compare_data(self, partner_list):
         items_from_db = list(get_info_from_db())
         items_dict = {item.article: item for item in items_from_db}
@@ -52,9 +51,6 @@ class BaseStore:
                 print(f'Article {article} not found in the database')
 
         return missing_items
-
-
-
 
 
 class Soup:

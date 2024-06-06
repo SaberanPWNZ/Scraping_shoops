@@ -1,1 +1,1 @@
-from Foxtrot.shop_model import FoxtrotStorefrom databases.parse_db import get_info_from_dbdef start_foxtrot():    foxtrot = FoxtrotStore()    items = foxtrot.generate_info()    return foxtrot.compare_data(items)
+from Foxtrot.shop_model import FoxtrotStoredef start_foxtrot():    foxtrot = FoxtrotStore()    items = foxtrot.generate_info()    return foxtrot.compare_data(items)

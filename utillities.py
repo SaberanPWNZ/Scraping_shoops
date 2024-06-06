@@ -8,7 +8,6 @@ def get_article_from_title(title: str):
     return article
 
 
-
 def clean_price(price: str):
     return re.sub(r'\D', '', price)
 
