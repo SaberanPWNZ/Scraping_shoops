@@ -1,1 +1,18 @@
-FROM ubuntu:latestLABEL authors="mac"RUN apt-get update && \    apt-get install -y python3 python3-pipCOPY requirements.txt /app/requirements.txtRUN pip3 install -r /app/requirements.txtCOPY . /appWORKDIR /appCMD ["python3", "bot.py"]
+FROM python:3.9-slim
+
+RUN apt-get update && apt-get install -y git
+
+WORKDIR /app/Scraping_shoops/
+
+
+RUN git clone https://github.com/SaberanPWNZ/Scraping_shoops.git .
+
+COPY requirements.txt .
+COPY .env .env
+RUN pip install --upgrade pip
+
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+
+CMD ["python", "bot.py"]
