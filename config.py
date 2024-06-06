@@ -12,9 +12,3 @@ HEADERS = {
     #           '.34.0.0; _ga=GA1.2.407294421.1712913772; _gat_UA-76310630-1=1',
 }
 
-GOOGLE_TOKEN = 'AIzaSyCgngwhjEc_86t2B2rJjFPcT-urHd3enIA'
-
-BOT_TOKEN = '7238299258:AAGlqpcSruCAbsKkflOpzYqZandlvUbz-nY'
-
-EMAIL_USERNAME = 'pricechecker868@gmail.com'
-EMAIL_PASSWORD = 'wznw ppds moyo lile'
