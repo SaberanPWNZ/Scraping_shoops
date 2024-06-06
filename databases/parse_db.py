@@ -22,7 +22,10 @@ row_data_article = test_sheet.sheet1.batch_get(ranges_rows_code)
 row_data_price = test_sheet.sheet1.batch_get(ranges_rows_price)
 row_data_title = test_sheet.sheet1.batch_get(ranges_rows_title)
 
-conn = _sqlite3.connect('Wacom.db')
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(current_dir, 'Wacom.db')
+conn = _sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 
@@ -59,20 +62,14 @@ def insert_new_info(items_list):
         cursor.execute('''INSERT INTO WACOM(article, title, price)
         VALUES (?, ?, ?)''', (article, title, price))
 
-    conn.commit() 
-
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-db_path = os.path.join(current_dir, 'Wacom.db')
+    conn.commit()  # Ensure changes are saved to the database
 
 
 
 def get_info_from_db():
     items_from_db = []
-    con = _sqlite3.connect(db_path)
-    cur = con.execute('''SELECT * FROM WACOM''')
-    all_from_table = cur.fetchall()
+    cursor.execute('''SELECT * FROM WACOM''')
+    all_from_table = cursor.fetchall()
 
     for elem in all_from_table:
         item = Item.from_tuple(elem)
