@@ -65,15 +65,11 @@ def insert_new_info(items_list):
     conn.commit()  # Ensure changes are saved to the database
 
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(current_dir, 'Wacom.db')
-con = _sqlite3.connect(db_path)
-
 
 def get_info_from_db():
     items_from_db = []
-    cur = con.execute('''SELECT * FROM WACOM''')
-    all_from_table = cur.fetchall()
+    cursor.execute('''SELECT * FROM WACOM''')
+    all_from_table = cursor.fetchall()
 
     for elem in all_from_table:
         item = Item.from_tuple(elem)
