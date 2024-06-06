@@ -2,10 +2,7 @@ import _sqlite3
 import os
 from datetime import datetime
 
-import datetime
-from gspread import api_key
 import gspread
-
 from dotenv import load_dotenv
 from Classes.item import Item
 
@@ -16,8 +13,6 @@ path_to_keys = gspread.api_key(token=google_token)
 test_sheet = path_to_keys.open_by_url(
     "https://docs.google.com/spreadsheets/d/1v3LhZ__mm9G2F0nEdLlQzQ-YcqWYvXGpI9f6ijeC9jY/edit#gid=0")
 
-#formatted_datetime = datetime.now().strftime("%d_%m_%Y_%H_%M")
-
 data = []
 
 ranges_rows_code = ['A3:A10', 'A12:A14', 'A17:A27', 'A30:A32', 'A34:A44', 'A47:A60', 'A62:A64', 'A66:A67']
@@ -27,11 +22,9 @@ row_data_article = test_sheet.sheet1.batch_get(ranges_rows_code)
 row_data_price = test_sheet.sheet1.batch_get(ranges_rows_price)
 row_data_title = test_sheet.sheet1.batch_get(ranges_rows_title)
 
-conn = _sqlite3.connect('/Foxtrot/Wacom_price.db') #need to check
+conn = _sqlite3.connect('/Foxtrot/Wacom_price.db')  # Ensure this path is correct
 cursor = conn.cursor()
 
-
-# print(row_data_article, row_data_price, row_data_title)
 def clear_data(items_list):
     cleaned_data = []
     for item in items_list:
@@ -40,16 +33,13 @@ def clear_data(items_list):
                 cleaned_data.append(i)
         else:
             cleaned_data.append(i)
-
     return cleaned_data
-
 
 clean_title = [item for sublist in clear_data(row_data_title) for item in sublist]
 clean_article = [item for sublist in clear_data(row_data_article) for item in sublist]
 clean_price = [item for sublist in clear_data(row_data_price) for item in sublist]
 
 final_data = list(zip(clean_title, clean_price, clean_article))
-
 
 def insert_new_info(items_list):
     cursor.execute('''CREATE TABLE IF NOT EXISTS WACOM (
@@ -64,8 +54,9 @@ def insert_new_info(items_list):
         title = item[0].strip()
         price = item[1].strip().replace(' ', "").replace(',00', '').replace(',', "")
         cursor.execute('''INSERT INTO WACOM(article, title, price)
-        VALUES (?, ?, ?)''', (article, title, price.encode()))
+        VALUES (?, ?, ?)''', (article, title, price))
 
+    conn.commit()  # Ensure changes are saved to the database
 
 def get_info_from_db():
     items_from_db = []
