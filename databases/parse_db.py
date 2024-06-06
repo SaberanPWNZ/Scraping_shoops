@@ -22,8 +22,9 @@ row_data_article = test_sheet.sheet1.batch_get(ranges_rows_code)
 row_data_price = test_sheet.sheet1.batch_get(ranges_rows_price)
 row_data_title = test_sheet.sheet1.batch_get(ranges_rows_title)
 
-conn = _sqlite3.connect('/Foxtrot/Wacom_price.db')  # Ensure this path is correct
+conn = _sqlite3.connect('Wacom.db')
 cursor = conn.cursor()
+
 
 def clear_data(items_list):
     cleaned_data = []
@@ -35,11 +36,13 @@ def clear_data(items_list):
             cleaned_data.append(i)
     return cleaned_data
 
+
 clean_title = [item for sublist in clear_data(row_data_title) for item in sublist]
 clean_article = [item for sublist in clear_data(row_data_article) for item in sublist]
 clean_price = [item for sublist in clear_data(row_data_price) for item in sublist]
 
 final_data = list(zip(clean_title, clean_price, clean_article))
+
 
 def insert_new_info(items_list):
     cursor.execute('''CREATE TABLE IF NOT EXISTS WACOM (
@@ -58,10 +61,19 @@ def insert_new_info(items_list):
 
     conn.commit()  # Ensure changes are saved to the database
 
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Строим относительный путь к базе данных
+db_path = os.path.join(current_dir, 'Wacom.db')
+
+
+
 def get_info_from_db():
     items_from_db = []
-    cursor.execute('''SELECT * FROM WACOM''')
-    all_from_table = cursor.fetchall()
+    con = _sqlite3.connect(db_path)
+    cur = con.execute('''SELECT * FROM WACOM''')
+    all_from_table = cur.fetchall()
 
     for elem in all_from_table:
         item = Item.from_tuple(elem)
@@ -69,3 +81,4 @@ def get_info_from_db():
         yield item
     return items_from_db
 
+# insert_new_info(final_data)
