@@ -12,8 +12,6 @@ pydantic~=2.5.3
 python-dotenv==1.0.1
 yarl==1.9.4
 beautifulsoup4==4.12.3
-
-
 pip~=24.0
 DateTime~=5.5
 filelock~=3.13.4
@@ -22,6 +20,5 @@ setuptools~=65.5.0
 packaging~=23.2
 zipp~=3.18.1
 build~=1.2.1
-dotenv~=0.0.5
 gspread~=6.1.0
 requests~=2.31.0
