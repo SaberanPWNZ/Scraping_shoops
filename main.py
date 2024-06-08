@@ -50,10 +50,6 @@ def send_email_with_result(subject: str, body: str, to_email: str):
         print(f"Failed to send email: {e}")
 
 
-def send_shops_data():
-    results = start_shops_checking()
-    body = '\n\n'.join([str(result) for result in results])
-    send_email_with_result(subject="Shops Data Results", body=body, to_email=EMAIL_RECIPIENT)
 
 
 # if __name__ == '__main__':

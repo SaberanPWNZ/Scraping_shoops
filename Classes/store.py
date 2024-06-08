@@ -29,7 +29,7 @@ class BaseStore:
         missing_items = []
 
         for elem in partner_list:
-            article = elem['article']
+            article = elem['article'].upper()
             price_partner = int(elem['price'])
 
             if article in items_dict:
@@ -58,10 +58,6 @@ class Soup:
         self.soup = BeautifulSoup(response.text, 'lxml')
 
     def find_element(self, **kwargs):
-        obj = self.soup.find(**kwargs)
-        return obj
-
-    def find_elements(self, **kwargs):
         obj = self.soup.find(**kwargs)
         return obj
 

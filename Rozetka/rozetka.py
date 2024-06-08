@@ -1,0 +1,1 @@
+from Rozetka.rozetka_model import RozetkaStoredef start_rozetka():    rozetka = RozetkaStore()    items = rozetka.generate_info()    return rozetka.compare_data(items)
