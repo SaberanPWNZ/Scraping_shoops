@@ -62,7 +62,7 @@ def insert_new_info(items_list):
         cursor.execute('''INSERT INTO WACOM(article, title, price)
         VALUES (?, ?, ?)''', (article, title, price))
 
-    conn.commit()  # Ensure changes are saved to the database
+    conn.commit()
 
 
 
