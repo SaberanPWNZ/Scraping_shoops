@@ -84,4 +84,6 @@ yarl==1.9.4
 zipp==3.18.1
 zope.interface==6.4.post2
 webdriver_manager==4.0.1
-
+greenlet==3.0.3
+playwright==1.44.0
+pyee==11.1.0
