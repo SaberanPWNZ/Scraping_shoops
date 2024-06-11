@@ -66,6 +66,7 @@ class Soup:
         obj = self.soup.find(**kwargs)
         return obj
 
+
     def find_all_next(self, **kwargs):
         obj = self.soup.find_all_next(**kwargs)
         return obj
