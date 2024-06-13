@@ -1,0 +1,1 @@
+from WO.Wo_model import WoStoredef start_wo():    wo = WoStore()    items = wo.generate_info()    return wo.compare_data(items)
