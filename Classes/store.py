@@ -29,33 +29,40 @@ class BaseStore:
         missing_items = []
 
         for elem in partner_list:
-            article = elem['article'].upper()
-            price_partner = int(elem['price'])
-
             try:
+                article = elem.get('article', '').upper()
+                if not article:
+                    raise ValueError(f'Article is missing or empty in element: {elem}')
+
+                price_partner = int(elem['price'])
+
                 if article in items_dict:
                     item = items_dict[article]
                     item_price = int(item.price.decode('utf-8')) if isinstance(item.price, bytes) else int(item.price)
                     if price_partner == item_price:
                         missing_items.append(f'✅{article} - Ціна партнера- {price_partner} грн, РРЦ {item_price} грн')
 
-                    if price_partner < item_price:
+                    elif price_partner < item_price:
                         missing_items.append(
                             f'🛑 Ціна нижча за РРЦ {article} - {price_partner} грн, Ціна РРЦ = {item_price} грн')
 
-                    if price_partner > item_price:
+                    elif price_partner > item_price:
                         missing_items.append(
                             f'⚠️ Ціна вища за РРЦ {article} - {price_partner} грн, Ціна РРЦ = {item_price} грн')
                 else:
                     missing_items.append(f'🔍 {article} не знайдено в базі данних')
 
-            except KeyError:
-                missing_items.append(f'❌ Помилка: Невірний формат данних {article}')
+            except KeyError as e:
+                missing_items.append(f'❌ Помилка: Невірний формат данних {elem}, {e}')
 
-            except Exception as e:
+            except ValueError as e:
                 missing_items.append(f'❌ Помилка: {e}')
 
-        return missing_items
+            except Exception as e:
+                missing_items.append(f'❌ Помилка: розпізнавання данних')
+
+        sorted_items = sorted(missing_items, key=lambda x: (not x.startswith('✅'), x))
+        return sorted_items
 
 
 class Soup:
