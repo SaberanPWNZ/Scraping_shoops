@@ -2,6 +2,7 @@ import requests
 import lxml
 from bs4 import BeautifulSoup
 
+from databases.db_helper import db
 from databases.parse_db import get_info_from_db
 from utillities import get_article_from_title, HEADERS
 
@@ -19,11 +20,8 @@ class BaseStore:
         response = requests.get(url=shop_url, headers=self.headers)
         return response
 
-    def post(self):
-        return requests.post(self.url, self.headers)
-
     def compare_data(self, partner_list):
-        items_from_db = list(get_info_from_db())
+        items_from_db = list(db.get_info_from_db())
         items_dict = {item.article: item for item in items_from_db}
 
         missing_items = []
@@ -72,7 +70,6 @@ class Soup:
     def find_element(self, **kwargs):
         obj = self.soup.find(**kwargs)
         return obj
-
 
     def find_all_next(self, **kwargs):
         obj = self.soup.find_all_next(**kwargs)
