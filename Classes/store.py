@@ -33,7 +33,7 @@ class BaseStore:
                     raise ValueError(f'Article is missing or empty in element: {elem}')
 
                 price_partner = int(elem['price'])
-                print(article)
+
                 if article in items_dict:
                     item = items_dict[article]
                     item_price = int(item.price.decode('utf-8')) if isinstance(item.price, bytes) else int(item.price)

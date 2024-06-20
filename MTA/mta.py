@@ -1,0 +1,1 @@
+from MTA.mta_model import MtaStoredef start_mta():    mta = MtaStore()    items = mta.generate_info()    result = mta.compare_data_mta(items)    return result
