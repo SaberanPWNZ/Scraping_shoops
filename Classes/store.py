@@ -2,6 +2,7 @@ import requests
 import lxml
 from bs4 import BeautifulSoup
 
+from databases.db_helper import db
 from databases.parse_db import get_info_from_db
 from utillities import get_article_from_title, HEADERS
 
@@ -19,38 +20,47 @@ class BaseStore:
         response = requests.get(url=shop_url, headers=self.headers)
         return response
 
-    def post(self):
-        return requests.post(self.url, self.headers)
-
     def compare_data(self, partner_list):
-        items_from_db = list(get_info_from_db())
+        items_from_db = list(db.get_info_from_db())
         items_dict = {item.article: item for item in items_from_db}
 
         missing_items = []
 
         for elem in partner_list:
-            article = elem['article']
-            price_partner = int(elem['price'])
+            try:
+                article = elem.get('article', '').upper()
+                if not article:
+                    raise ValueError(f'Article is missing or empty in element: {elem}')
 
-            if article in items_dict:
-                item = items_dict[article]
-                item_price = int(item.price.decode('utf-8')) if isinstance(item.price, bytes) else int(item.price)
-                if price_partner == item_price:
-                    missing_items.append(f'✅{article} - Ціна партнера- {price_partner} грн, РРЦ {item_price} грн')
+                price_partner = int(elem['price'])
 
-                if price_partner < item_price:
-                    missing_items.append(
-                        f'🛑 Ціна нижча за РРЦ {article} - {price_partner} грн, Ціна РРЦ = {item_price} грн')
+                if article in items_dict:
+                    item = items_dict[article]
+                    item_price = int(item.price.decode('utf-8')) if isinstance(item.price, bytes) else int(item.price)
+                    if price_partner == item_price:
+                        missing_items.append(f'✅{article} - Ціна партнера- {price_partner} грн, РРЦ {item_price} грн')
 
-                if price_partner > item_price:
-                    missing_items.append(
-                        f'⚠️ Ціна вища за РРЦ {article} - {price_partner} грн, Ціна РРЦ = {item_price} грн')
+                    elif price_partner < item_price:
+                        missing_items.append(
+                            f'🛑 Ціна нижча за РРЦ {article} - {price_partner} грн, Ціна РРЦ = {item_price} грн')
 
-            else:
-                # missing_items.append(article)
-                print(f'Article {article} not found in the database')
+                    elif price_partner > item_price:
+                        missing_items.append(
+                            f'⚠️ Ціна вища за РРЦ {article} - {price_partner} грн, Ціна РРЦ = {item_price} грн')
+                else:
+                    missing_items.append(f'🔍 {article} не знайдено в базі данних')
 
-        return missing_items
+            except KeyError as e:
+                missing_items.append(f'❌ Помилка: Невірний формат данних {elem}, {e}')
+
+            except ValueError as e:
+                missing_items.append(f'❌ Помилка: {e}')
+
+            except Exception as e:
+                missing_items.append(f'❌ Помилка: розпізнавання данних')
+
+        sorted_items = sorted(missing_items, key=lambda x: (not x.startswith('🛑'), x))
+        return sorted_items
 
 
 class Soup:
@@ -58,10 +68,6 @@ class Soup:
         self.soup = BeautifulSoup(response.text, 'lxml')
 
     def find_element(self, **kwargs):
-        obj = self.soup.find(**kwargs)
-        return obj
-
-    def find_elements(self, **kwargs):
         obj = self.soup.find(**kwargs)
         return obj
 

@@ -22,3 +22,28 @@ HEADERS = {
     'Upgrade-Insecure-Requests': '1',
     'Cache-Control': 'max-age=0'
 }
+
+
+AUCHAN_ARTICLES = {
+    'Графический планшет Wacom Intuos M Bluetooth Black': 'CTL-6100WLK-N',
+    'Графический планшет Wacom Intuos S Bluetooth Black': 'CTL-4100WLK-N',
+    'Графический планшет Wacom Intuos S Black': 'CTL-4100K-N',
+    'Графический планшет Wacom Intuos M Black': 'CTL-6100K-B',
+    'Графический планшет Wacom Intuos Pro L': 'PTH-860-N',
+    'Монитор-планшет Wacom Cintiq 22': 'DTK2260K0A',
+    'Монитор-планшет Wacom Cintiq 16FHD': 'DTK1660K0B',
+    'Графический планшет Wacom Intuos S Bluetooth Manga черный': 'CTL-4100WLK-M',
+    'Монитор-планшет Wacom Cintiq 24 Pro UHD': 'DTK-2420',
+    'Графический планшет Wacom One by Medium Red': 'CTL-672-N',
+    'Графический планшет Wacom Intuos Pro M': 'PTH-660-N',
+    'Графический планшет Wacom Intuos Pro S': 'PTH460K0B',
+    'Монитор-планшет Wacom Cintiq 24 ProTouch': 'DTH-2420',
+    'Монитор-планшет Wacom Cintiq Pro 16 2021': 'DTH167K0B',
+    'Графический планшет Wacom Intuos M Bluetooth Pistachio': 'CTL-6100WLE-N',
+    'Графический планшет Wacom One by Small Black': 'CTL-472-N',
+    'Графический планшет Wacom Intuos S Bluetooth Pistachio': 'CTL-4100WLE-N'
+
+}
+
+
+

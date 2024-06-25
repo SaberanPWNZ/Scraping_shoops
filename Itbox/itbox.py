@@ -1,0 +1,1 @@
+from Itbox.itbox_model import ItboxStoredef start_itbox():    itbox = ItboxStore()    items = itbox.generate_info()    return itbox.compare_data(items)

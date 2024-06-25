@@ -1,0 +1,1 @@
+from CAN.can_model import CanStoredef start_can():    can = CanStore()    items = can.generate_info()    return can.compare_data_can(items)

@@ -1,0 +1,1 @@
+from Citrus.citrus_model import CitrusStoredef start_citrus():    citrus = CitrusStore()    items = citrus.generate_info()    return citrus.compare_data_citrus(items)
