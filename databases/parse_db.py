@@ -1,10 +1,10 @@
 import _sqlite3
 import os
 import re
-
 from dotenv import load_dotenv
 import gspread
 
+from Classes.db import DataBase
 from Classes.item import Item
 
 load_dotenv()
@@ -22,12 +22,12 @@ def clear_data(items_list):
 class GoogleSheet:
     ranges = [('A3:A10', 'b3:b10', 'E3:E10'),
               ('A12:A14', 'b12:b14', 'E12:E14'),
-              ('A17:A27', 'b17:b27', 'E17:E27'),
-              ('A30:A32', 'b30:b32', 'E30:E32'),
-              ('A34:A44', 'b34:b44', 'E34:E44'),
-              ('A47:A60', 'b47:b60', 'E47:E60'),
-              ('A62:A64', 'b62:b64', 'E62:E64'),
-              ('A66:A67', 'b66:b67', 'E66:E67')]
+              ('A16:A26', 'b16:b26', 'E16:E26'),
+              ('A29:A31', 'b29:b31', 'E29:E31'),
+              ('A33:A43', 'b33:b43', 'E33:E43'),
+              ('A46:A59', 'b46:b59', 'E46:E59'),
+              ('A61:A63', 'b61:b63', 'E61:E63'),
+              ('A65:A66', 'b65:b66', 'E65:E66')]
     google_token = os.getenv("GOOGLE_TOKEN")
     path_to_keys = gspread.api_key(token=google_token)
 
@@ -53,10 +53,11 @@ class GoogleSheet:
 
         return cleaned_data_list
 
+
     def insert_new_info(self, item: Item):
         # cursor.execute('''CREATE TABLE IF NOT EXISTS WACOM (
         #                     id INTEGER PRIMARY KEY,
-        #                     article TEXT NOT NULL,
+        #                     article  NOT NULL,
         #                     title TEXT NOT NULL,
         #                     price INTEGER NOT NULL
         #                 )''')
@@ -98,4 +99,8 @@ def get_info_from_db():
         yield item
     return items_from_db
 
-
+# table = GoogleSheet()
+# db = DataBase(db_path=db_path)
+# DATA = table.generate_info_from_google_sheet()
+# clear_info = table.clear_info_from_sheets(DATA)
+# db.update_db(clear_info)
