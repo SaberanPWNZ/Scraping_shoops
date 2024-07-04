@@ -6,6 +6,7 @@ import gspread
 
 from Classes.db import DataBase
 from Classes.item import Item
+from databases.google_table_ranges import WACOM_RANGES, XP_PEN_RANGES, wacom_table_url, xp_pen_table_url
 
 load_dotenv()
 
@@ -20,24 +21,19 @@ def clear_data(items_list):
 
 
 class GoogleSheet:
-    ranges = [('A3:A10', 'b3:b10', 'E3:E10'),
-              ('A12:A14', 'b12:b14', 'E12:E14'),
-              ('A16:A26', 'b16:b26', 'E16:E26'),
-              ('A29:A31', 'b29:b31', 'E29:E31'),
-              ('A33:A43', 'b33:b43', 'E33:E43'),
-              ('A46:A59', 'b46:b59', 'E46:E59'),
-              ('A61:A63', 'b61:b63', 'E61:E63'),
-              ('A65:A66', 'b65:b66', 'E65:E66')]
+    ranges_wacom = WACOM_RANGES
+    ranges_xppen = XP_PEN_RANGES
     google_token = os.getenv("GOOGLE_TOKEN")
     path_to_keys = gspread.api_key(token=google_token)
+    xp_pen_table_url = xp_pen_table_url
+    wacom_table_url = wacom_table_url
 
-    def generate_info_from_google_sheet(self):
+    def generate_info_from_google_sheet(self, google_sheet_url, ranges):
         cleaned_data_list = []
-        test_sheet = self.path_to_keys.open_by_url(
-            "https://docs.google.com/spreadsheets/d/1v3LhZ__mm9G2F0nEdLlQzQ-YcqWYvXGpI9f6ijeC9jY/edit#gid=0")
-        row_data_article = test_sheet.sheet1.batch_get([rng[0] for rng in GoogleSheet.ranges])
-        row_data_title = test_sheet.sheet1.batch_get([rng[1] for rng in GoogleSheet.ranges])
-        row_data_price = test_sheet.sheet1.batch_get([rng[2] for rng in GoogleSheet.ranges])
+        test_sheet = self.path_to_keys.open_by_url(url=google_sheet_url)
+        row_data_article = test_sheet.sheet1.batch_get([rng[0] for rng in ranges])
+        row_data_title = test_sheet.sheet1.batch_get([rng[1] for rng in ranges])
+        row_data_price = test_sheet.sheet1.batch_get([rng[2] for rng in ranges])
 
         clean_title = clear_data(row_data_title)
         clean_article = clear_data(row_data_article)
@@ -52,7 +48,6 @@ class GoogleSheet:
             )
 
         return cleaned_data_list
-
 
     def insert_new_info(self, item: Item):
         # cursor.execute('''CREATE TABLE IF NOT EXISTS WACOM (
@@ -99,8 +94,15 @@ def get_info_from_db():
         yield item
     return items_from_db
 
+#
 # table = GoogleSheet()
 # db = DataBase(db_path=db_path)
-# DATA = table.generate_info_from_google_sheet()
+# DATA = table.generate_info_from_google_sheet(
+#     google_sheet_url=table.xp_pen_table_url,
+#     ranges=table.ranges_xppen
+# )
+#
 # clear_info = table.clear_info_from_sheets(DATA)
 # db.update_db(clear_info)
+#
+# items = db.get_info_from_db()
