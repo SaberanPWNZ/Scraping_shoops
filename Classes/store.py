@@ -15,6 +15,7 @@ class BaseStore:
         self.cookies = cookies
         self.all_items = []
 
+
     @staticmethod
     def get(self, shop_url):
         response = requests.get(url=shop_url, headers=self.headers)
