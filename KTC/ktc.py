@@ -1,1 +1,1 @@
-from KTC.ktc_model import KtcStoredef start_ktc():    ktc = KtcStore()    items = ktc.generate_info()    return ktc.compare_data(items)
+from KTC.ktc_model import KtcStoredef start_ktc():    ktc = KtcStore('https://ktc.ua/search/brand-wacom/graphic_tablets/?q=wacom&sort-search-desc')    items = ktc.generate_info()    return ktc.compare_data(items)def start_ktc_xp_pen():    ktc = KtcStore('https://ktc.ua/search/graphic_tablets/?q=xp-pen&sort-search-desc')    items = ktc.generate_info_xp_pen()    return ktc.compare_data_xp_pen(items)

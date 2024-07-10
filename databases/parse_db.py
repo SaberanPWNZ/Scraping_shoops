@@ -1,11 +1,12 @@
 import _sqlite3
 import os
 import re
-
 from dotenv import load_dotenv
 import gspread
 
+from Classes.db import DataBase
 from Classes.item import Item
+from databases.google_table_ranges import WACOM_RANGES, XP_PEN_RANGES, wacom_table_url, xp_pen_table_url
 
 load_dotenv()
 
@@ -20,24 +21,19 @@ def clear_data(items_list):
 
 
 class GoogleSheet:
-    ranges = [('A3:A10', 'b3:b10', 'E3:E10'),
-              ('A12:A14', 'b12:b14', 'E12:E14'),
-              ('A17:A27', 'b17:b27', 'E17:E27'),
-              ('A30:A32', 'b30:b32', 'E30:E32'),
-              ('A34:A44', 'b34:b44', 'E34:E44'),
-              ('A47:A60', 'b47:b60', 'E47:E60'),
-              ('A62:A64', 'b62:b64', 'E62:E64'),
-              ('A66:A67', 'b66:b67', 'E66:E67')]
+    ranges_wacom = WACOM_RANGES
+    ranges_xppen = XP_PEN_RANGES
     google_token = os.getenv("GOOGLE_TOKEN")
     path_to_keys = gspread.api_key(token=google_token)
+    xp_pen_table_url = xp_pen_table_url
+    wacom_table_url = wacom_table_url
 
-    def generate_info_from_google_sheet(self):
+    def generate_info_from_google_sheet(self, google_sheet_url, ranges):
         cleaned_data_list = []
-        test_sheet = self.path_to_keys.open_by_url(
-            "https://docs.google.com/spreadsheets/d/1v3LhZ__mm9G2F0nEdLlQzQ-YcqWYvXGpI9f6ijeC9jY/edit#gid=0")
-        row_data_article = test_sheet.sheet1.batch_get([rng[0] for rng in GoogleSheet.ranges])
-        row_data_title = test_sheet.sheet1.batch_get([rng[1] for rng in GoogleSheet.ranges])
-        row_data_price = test_sheet.sheet1.batch_get([rng[2] for rng in GoogleSheet.ranges])
+        test_sheet = self.path_to_keys.open_by_url(url=google_sheet_url)
+        row_data_article = test_sheet.sheet1.batch_get([rng[0] for rng in ranges])
+        row_data_title = test_sheet.sheet1.batch_get([rng[1] for rng in ranges])
+        row_data_price = test_sheet.sheet1.batch_get([rng[2] for rng in ranges])
 
         clean_title = clear_data(row_data_title)
         clean_article = clear_data(row_data_article)
@@ -56,7 +52,7 @@ class GoogleSheet:
     def insert_new_info(self, item: Item):
         # cursor.execute('''CREATE TABLE IF NOT EXISTS WACOM (
         #                     id INTEGER PRIMARY KEY,
-        #                     article TEXT NOT NULL,
+        #                     article  NOT NULL,
         #                     title TEXT NOT NULL,
         #                     price INTEGER NOT NULL
         #                 )''')
@@ -98,4 +94,15 @@ def get_info_from_db():
         yield item
     return items_from_db
 
-
+#
+# table = GoogleSheet()
+# db = DataBase(db_path=db_path)
+# DATA = table.generate_info_from_google_sheet(
+#     google_sheet_url=table.xp_pen_table_url,
+#     ranges=table.ranges_xppen
+# )
+#
+# clear_info = table.clear_info_from_sheets(DATA)
+# db.update_db(clear_info)
+#
+# items = db.get_info_from_db()
