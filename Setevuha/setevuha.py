@@ -1,1 +1,0 @@
-from Setevuha.setevuha_model import SetevuhaStoredef start_setevuha():    setevuha = SetevuhaStore()    items = setevuha.generate_info()    return setevuha.compare_data(items)

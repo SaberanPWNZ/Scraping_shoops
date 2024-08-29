@@ -1,14 +1,14 @@
 import requests
-import lxml
 from bs4 import BeautifulSoup
 
 from databases.db_helper import db
-from databases.parse_db import get_info_from_db
-from utillities import get_article_from_title, HEADERS
+
+from stores.Itbox.itbox_info import ITBOX_HEADERS
+from utillities import get_article_from_title
 
 
 class BaseStore:
-    def __init__(self, shop_url, headers=HEADERS, cookies=None, ):
+    def __init__(self, shop_url, headers=ITBOX_HEADERS, cookies=None, ):
         self.item_list = []
         self.url = shop_url
         self.headers = headers
@@ -58,7 +58,7 @@ class BaseStore:
                 missing_items.append(f'❌ Помилка: {e}')
 
             except Exception as e:
-                missing_items.append(f'❌ Помилка: розпізнавання данних')
+                missing_items.append(f'❌ Помилка: розпізнавання данних {article}')
 
         sorted_items = sorted(missing_items, key=lambda x: (not x.startswith('🛑'), x))
         return sorted_items

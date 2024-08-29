@@ -1,0 +1,1 @@
+import jsonimport redisfrom stores.Rozetka.rozetka import start_rozetka_wacom, wacomredis_client = redis.Redis(host='localhost', port=6379, db=0)report_data = start_rozetka_wacom(wacom)report_data_json = json.dumps(report_data)redis_client.set(name='rozetka', value=report_data_json, ex=300)
