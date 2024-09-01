@@ -5,9 +5,7 @@ import re
 import _sqlite3
 from dotenv import load_dotenv
 import gspread
-from gspread import worksheet
 
-from Classes.db import DataBase
 from Classes.item import Item
 from databases.google_table_ranges import WACOM_RANGES, XP_PEN_RANGES, wacom_table_url, xp_pen_table_url
 
@@ -114,7 +112,6 @@ def get_info_from_db():
     for elem in all_from_table:
         item = Item.from_tuple(elem)
         items_from_db.append(item)
-        yield item
     return items_from_db
 
 

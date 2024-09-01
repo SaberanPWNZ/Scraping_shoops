@@ -12,6 +12,6 @@ def clean_price(price: str):
     return re.sub(r'\D', '', price)
 
 
-
-
-
+def create_message(shop_name, text, brand_name):
+    answer = '\n'.join([str(item) for item in text])
+    return f"🛒 {shop_name}/{brand_name}:\n\n{answer}"

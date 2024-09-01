@@ -1,0 +1,1 @@
+from celery import Celerycelery_app = Celery(name='telegram_bot',                    broker_url='redis://localhost:6379/0',                    backend_url='redis://localhost:6379/0')

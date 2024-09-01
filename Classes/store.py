@@ -39,6 +39,7 @@ class BaseStore:
                     item = items_dict[article]
                     item_price = int(item.price.decode('utf-8')) if isinstance(item.price, bytes) else int(item.price)
                     if price_partner == item_price:
+
                         missing_items.append(f'✅{article} - Ціна партнера- {price_partner} грн, РРЦ {item_price} грн')
 
                     elif price_partner < item_price:
