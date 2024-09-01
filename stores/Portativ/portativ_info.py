@@ -1,0 +1,1 @@
+PORTATIV_ARTICLES = {    'Графічний планшет XP-PEN Star G640S': 'Star G640S',    'Графічний планшет XP-PEN Deco 02': 'DECO 02',    'Графічний планшет XP-PEN Deco Pro S': 'DECO Pro S'}

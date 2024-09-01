@@ -1,0 +1,1 @@
+from stores.WacomStore.wacomsotre_info import urlfrom stores.WacomStore.wacomstore_model import WacomStoredef start_wacom_store_wacom():    wacom = WacomStore(url=url)    items = wacom.generate_info()    return wacom.compare_data(items)

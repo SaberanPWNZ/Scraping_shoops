@@ -1,1 +1,0 @@
-from Auchan.auchan_model import AuchanStoredef start_auchan():    auchan = AuchanStore()    items = auchan.generate_info()    return auchan.compare_data_auchan(items)

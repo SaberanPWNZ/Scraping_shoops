@@ -1,0 +1,1 @@
+from tasks.beat_schedule_worker import CELERY_BEAT_SCHEDULEfrom tasks.client import celery_appCELERY_TIMEZONE = 'UTC'celery_app.conf.timezone = CELERY_TIMEZONEcelery_app.conf.beat_schedule = CELERY_BEAT_SCHEDULE

@@ -1,1 +1,0 @@
-from Moyo.moyo_model import MoyoStoreurls = [    'https://www.moyo.ua/ua/acsessor/acsessor_for_comp/manipulators/wacom/?page=1',    'https://www.moyo.ua/ua/acsessor/acsessor_for_comp/manipulators/wacom/?page=2']def start_moyo():    moyo = MoyoStore(urls)    items = moyo.generate_info_from_moyo()    return moyo.compare_data(items)
