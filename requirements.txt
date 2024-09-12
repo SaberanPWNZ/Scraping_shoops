@@ -91,3 +91,6 @@ undetected-chromedriver==3.5.5
 celery==5.4.0
 redis==5.0.8
 SQLAlchemy==2.0.34
+psycopg2-binary==2.9.6
+
+
