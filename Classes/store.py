@@ -1,10 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
-from databases.db_helper import db
-
+from databases.db_helper import get_info_from_db, get_session
 from stores.Itbox.itbox_info import ITBOX_HEADERS
-from utillities import get_article_from_title
 
 
 class BaseStore:
@@ -15,14 +13,13 @@ class BaseStore:
         self.cookies = cookies
         self.all_items = []
 
-
     @staticmethod
     def get(self, shop_url):
         response = requests.get(url=shop_url, headers=self.headers)
         return response
 
     def compare_data(self, partner_list):
-        items_from_db = list(db.get_info_from_db())
+        items_from_db = list(get_info_from_db(session=get_session()))
         items_dict = {item.article: item for item in items_from_db}
 
         missing_items = []

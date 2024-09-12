@@ -11,10 +11,6 @@ from databases.google_table_ranges import WACOM_RANGES, XP_PEN_RANGES, wacom_tab
 
 load_dotenv()
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(current_dir, 'Wacom.db')
-conn = _sqlite3.connect(db_path)
-cursor = conn.cursor()
 
 
 def clear_data(items_list):
@@ -103,19 +99,6 @@ class GoogleSheet:
         return items
 
 
-# DELETE AFTER TESTS
-def get_info_from_db():
-    items_from_db = []
-    cursor.execute('''SELECT article, title, price FROM WACOM''')
-    all_from_table = cursor.fetchall()
-
-    for elem in all_from_table:
-        item = Item.from_tuple(elem)
-        items_from_db.append(item)
-        yield item
-    cursor.close()
-    conn.close()
-    return items_from_db
 
 
 
