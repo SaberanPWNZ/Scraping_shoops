@@ -37,6 +37,6 @@ ENV PATH="/usr/local/bin:${PATH}"
 EXPOSE 80
 
 ##ENTRYPOINT ["sh", "-c", "alembic upgrade head"]
-#CMD ["python", "main.py"]
-CMD ["sh", "-c", "alembic upgrade head && python main.py"]
+CMD ["python", "main.py"]
+#CMD ["sh", "-c", "alembic upgrade head && python main.py"]
 
