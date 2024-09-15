@@ -1,12 +1,9 @@
-import sqlite3
+
 import os
 import re
-
-import _sqlite3
 from dotenv import load_dotenv
 import gspread
 
-from Classes.item import Item
 from databases.google_table_ranges import WACOM_RANGES, XP_PEN_RANGES, wacom_table_url, xp_pen_table_url
 
 load_dotenv()

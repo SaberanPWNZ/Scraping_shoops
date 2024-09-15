@@ -36,5 +36,7 @@ ENV PATH="/usr/local/bin:${PATH}"
 # Открытие порта
 EXPOSE 80
 
-# Команда для запуска приложения и Celery
-CMD ["sh", "-c", "python3 main.py & celery -A tasks.tasks.celery_app worker --loglevel=INFO & celery -A tasks.tasks.celery_app beat --loglevel=INFO"]
+##ENTRYPOINT ["sh", "-c", "alembic upgrade head"]
+#CMD ["python", "main.py"]
+CMD ["sh", "-c", "alembic upgrade head && python main.py"]
+
