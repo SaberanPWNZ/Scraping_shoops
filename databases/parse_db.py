@@ -1,4 +1,3 @@
-
 import os
 import re
 from dotenv import load_dotenv
@@ -7,7 +6,6 @@ import gspread
 from databases.google_table_ranges import WACOM_RANGES, XP_PEN_RANGES, wacom_table_url, xp_pen_table_url
 
 load_dotenv()
-
 
 
 def clear_data(items_list):
@@ -22,10 +20,10 @@ class GoogleSheet:
     xp_pen_table_url = xp_pen_table_url
     wacom_table_url = wacom_table_url
 
-    def generate_info_from_google_sheet_list(self, google_sheet_url):
+    def generate_info_from_google_sheet_list(self, google_sheet_url, sheet_name):
         try:
             data = self.path_to_keys.open_by_url(url=google_sheet_url)
-            worksheet = data.worksheet(title='WACOM')
+            worksheet = data.worksheet(title=sheet_name)
             records = worksheet.get_all_values()
 
         except gspread.exceptions.WorksheetNotFound as error:
@@ -66,7 +64,7 @@ class GoogleSheet:
                 if len(item[1]) > 0:
                     price_raw = item[4]
                     price_clean = (re.sub(r'\xa0', '', price_raw).strip().
-                               replace(',00', '').replace(' ', ''))
+                                   replace(',00', '').replace(' ', ''))
 
                     clear_data = {
                         'title': item[1],
@@ -94,11 +92,25 @@ class GoogleSheet:
             }
             items.append(clear_data)
         return items
-
-
-
-
-
-
-
-
+    def clear_info_from_sheets_lists_for_xppen(self, list_of_items: list):
+            items = []
+            try:
+                for item in list_of_items:
+                    if len(item[1]) > 0:
+                        price_raw = item[8]
+                        price_clean = (re.sub(r'\xa0', '', price_raw).strip().
+                                       replace(',00', '').replace(' ', ''))
+                        if item[3] == '' or item[3] == 'Назва' or item[1] == 'Артикул':
+                            continue
+                        else:
+                            clear_data = {
+                                'title': item[3],
+                                'price': price_clean,
+                                'article': item[1]
+                            }
+                            items.append(clear_data)
+                    else:
+                        continue
+                return items
+            except Exception as error:
+                raise error
