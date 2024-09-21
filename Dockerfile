@@ -2,15 +2,15 @@ FROM python:3.9-slim
 
 WORKDIR /app/Scraping_shoops
 
-RUN chmod +w /etc/resolv.conf && echo "nameserver 8.8.8.8" > /etc/resolv.conf
+#RUN chmod +w /etc/resolv.conf && echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
 
 # Установка необходимых пакетов
-RUN apt-get update --allow-releaseinfo-change && apt-get install -y \
-    git \
-    --no-install-recommends \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+#RUN apt-get update --allow-releaseinfo-change && apt-get install -y \
+#    git \
+#    --no-install-recommends \
+#    && apt-get clean \
+#    && rm -rf /var/lib/apt/lists/*
 
 
 
