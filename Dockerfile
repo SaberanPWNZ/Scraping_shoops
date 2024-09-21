@@ -2,6 +2,8 @@ FROM python:3.9-slim
 
 WORKDIR /app/Scraping_shoops
 
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
 # Установка необходимых пакетов
 RUN apt-get update --allow-releaseinfo-change && apt-get install -y \
     git \
