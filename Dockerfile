@@ -2,12 +2,20 @@ FROM python:3.9-slim
 
 WORKDIR /app/Scraping_shoops
 
+# Установка необходимых пакетов
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     wget \
     gnupg \
     unzip \
+    libnss3 \
+    libxss1 \
+    libgconf-2-4 \
+    fonts-liberation \
+    libappindicator3-1 \
+    xdg-utils \
+    --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -36,7 +44,5 @@ ENV PATH="/usr/local/bin:${PATH}"
 # Открытие порта
 EXPOSE 80
 
-##ENTRYPOINT ["sh", "-c", "alembic upgrade head"]
+# Запуск приложения
 CMD ["python", "main.py"]
-#CMD ["sh", "-c", "alembic upgrade head && python main.py"]
-
