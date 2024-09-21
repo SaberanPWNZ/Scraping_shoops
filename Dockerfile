@@ -3,11 +3,12 @@ FROM python:3.9-slim
 WORKDIR /app/Scraping_shoops
 
 # Установка необходимых пакетов
-RUN apt-get update && apt-get install -y \
+RUN apt-get update --allow-releaseinfo-change && apt-get install -y \
     git \
     --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
 
 
 RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
