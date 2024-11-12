@@ -1,1 +1,91 @@
-services:  scraping_app:    build:      context: .      dockerfile: Dockerfile    restart: on-failure    container_name: scraping_app_container    env_file:      - .env    volumes:      - .:/app/Scraping_shoops    depends_on:      - redis#    command: ["sh", "-c", "alembic upgrade head"]    networks:      - scraping_network  redis:    image: redis:6.2-alpine    container_name: redis_container    restart: always    ports:      - "6379:6379"    networks:      - scraping_network  db:    image: postgres:13    container_name: postgres_db    environment:      POSTGRES_USER: postgres      POSTGRES_PASSWORD: postgres      POSTGRES_DB: novella    ports:      - "5436:5432"    #volumes:      #- postgres_data:/var/lib/postgresql/data    networks:      - scraping_network  celery:    build:      context: .    command: celery -A tasks.tasks.celery_app worker    container_name: celery_app    depends_on:      - scraping_app      - redis      - db      - celery_beat    dns:      - 8.8.8.8      - 8.8.4.4    networks:      - scraping_network  celery_beat:    build:      context: .    command: celery -A tasks.tasks.celery_app beat --loglevel=INFO    container_name: celery_beat    depends_on:      - redis      - db      - scraping_app    networks:      - scraping_networkvolumes:  postgres_data:networks:  scraping_network:    driver: bridge
+
+services:
+  scraping_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    container_name: scraping_app_container
+    env_file:
+      - .env
+    volumes:
+      - .:/app/Scraping_shoops
+    depends_on:
+      - redis
+    networks:
+      - scraping_network
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    container_name: django-container
+    env_file:
+      - .env
+    volumes:
+      - .:/app/Scraping_shoops
+    depends_on:
+        - db
+        - redis
+        - scraping_app
+    command: ["python", "manage.py", "runserver"]
+    networks:
+        - scraping_network
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis_container
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - scraping_network
+
+  db:
+    container_name: db
+    image: postgres:17.0-alpine
+    volumes:
+      - data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    networks:
+      - scraping_network
+    restart: always
+
+
+
+  celery:
+    build:
+      context: .
+    command: celery -A tasks.tasks.celery_app worker
+    container_name: celery_app
+    depends_on:
+      - scraping_app
+      - redis
+      - db
+      - celery_beat
+    networks:
+      - scraping_network
+
+  celery_beat:
+    build:
+      context: .
+    command: celery -A tasks.tasks.celery_app beat --loglevel=INFO
+    container_name: celery_beat
+    depends_on:
+      - redis
+      - db
+      - scraping_app
+    networks:
+      - scraping_network
+
+volumes:
+  data:
+
+networks:
+  scraping_network:
+    driver: bridge
+
