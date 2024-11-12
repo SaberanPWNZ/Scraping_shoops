@@ -1,1 +1,1 @@
-from stores.MTA.mta_model import MtaStoredef start_mta():    mta = MtaStore()    items = mta.generate_info()    result = mta.compare_data_mta(items)    return result
+from redis_client.redis import redis_clientfrom stores.MTA.mta_model import MtaStorefrom tasks.client import celery_app@celery_app.taskdef start_mta():    mta = MtaStore()    items = mta.generate_info()    result = mta.compare_data_mta(items)    json_data = redis_client.transfer_to_json(result)    redis_client.save_data_in_redis(name='mta_wacom', value=json_data)    return result

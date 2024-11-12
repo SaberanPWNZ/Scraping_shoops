@@ -19,6 +19,7 @@ class BaseStore:
         return response
 
     def compare_data(self, partner_list):
+
         session = get_session()
         items_from_db = list(get_info_from_db(session=get_session()))
         items_dict = {item.article: item for item in items_from_db}

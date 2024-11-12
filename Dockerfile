@@ -2,21 +2,18 @@ FROM python:3.9-slim
 
 WORKDIR /app/Scraping_shoops
 
+
+
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
     wget \
     gnupg \
-    unzip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Установка Google Chrome
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable \
-    && rm -rf /var/lib/apt/lists/*
+    ca-certificates \
+    --no-install-recommends && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC && \
+    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' && \
+    apt-get update && apt-get install -y google-chrome-stable && \
+    rm -rf /var/lib/apt/lists/*
 
 # Установка Chromedriver
 RUN pip install chromedriver-autoinstaller
@@ -36,7 +33,5 @@ ENV PATH="/usr/local/bin:${PATH}"
 # Открытие порта
 EXPOSE 80
 
-##ENTRYPOINT ["sh", "-c", "alembic upgrade head"]
+# Запуск приложения
 CMD ["python", "main.py"]
-#CMD ["sh", "-c", "alembic upgrade head && python main.py"]
-
