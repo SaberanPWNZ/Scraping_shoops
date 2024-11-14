@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y \
     apt-get update && apt-get install -y google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-# Установка Chromedriver
-RUN pip install chromedriver-autoinstaller
+## Установка Chromedriver
+#RUN pip install chromedriver-autoinstaller
 
 # Копирование файлов
 COPY . /app/Scraping_shoops

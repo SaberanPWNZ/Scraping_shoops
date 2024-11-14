@@ -7,7 +7,7 @@ from django.conf import settings
 
 from utillities import get_article_from_title, clean_price
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "price_checker.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scraper.settings")
 
 if not settings.configured:
     django.setup()

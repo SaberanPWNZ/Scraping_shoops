@@ -7,9 +7,7 @@ from aiogram import Bot, Dispatcher, types
 
 from dotenv import load_dotenv
 
-from Classes.item import metadata_obj
-from databases.db_helper import engine, update_db
-from databases.google_table_ranges import wacom_table_url, xp_pen_table_url
+
 from telegram_bot.comands_handlers import command_router
 from telegram_bot.handlers import user_router
 from telegram_bot.midlleware import AdminOnlyMiddleware

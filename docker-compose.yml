@@ -29,7 +29,8 @@ services:
         - db
         - redis
         - scraping_app
-    command: ["python", "manage.py", "runserver"]
+    command: [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
+
     networks:
         - scraping_network
 
