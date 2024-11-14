@@ -70,6 +70,7 @@ class BaseStore:
         return item_list
 
     def compare_data(self, partner_items_list: List[dict]):
+
         missing_items = []
         for elem in partner_items_list:
             try:
@@ -99,8 +100,8 @@ class BaseStore:
             except ValueError as e:
                 missing_items.append(f'❌ Помилка: {e}')
 
-            except Exception as e:
-                missing_items.append(f'❌ Помилка: розпізнавання данних {article}')
+            # except Exception as e:
+            #     missing_items.append(f'❌ Помилка: розпізнавання данних {}')
 
         sorted_items = sorted(missing_items, key=lambda x: (not x.startswith('🛑'), x))
         return sorted_items
