@@ -1,6 +1,6 @@
+version: '3.8'
 
 services:
-
   django:
     build:
       context: .
@@ -10,34 +10,27 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/app/Scraping_shoops
-    depends_on:
-        - db
-    command: [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
-
-    networks:
-        - scraping_network
-
-  bot:
-    image: python:3.12-slim
-    container_name: telegram_bot
-    restart: always
-    working_dir: /app/telegram_bot
-    env_file:
-      - .env
-    volumes:
       - .:/app
-    command: [ "python", "bot.py" ]
-    depends_on:
-      - django
-      - db
-      - redis
-      - celery
-      - celery_beat
     ports:
-      - "2222:2222"
+      - "8000:8000"
     networks:
       - scraping_network
+
+#  bot:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    restart: always
+#    container_name: telegram_bot
+#    env_file:
+#      - .env
+#    volumes:
+#      - .:/app
+#    ports:
+#      - "2222:2222"
+#    networks:
+#      - scraping_network
+
 
   redis:
     image: redis:6.2-alpine
@@ -61,37 +54,9 @@ services:
       - scraping_network
     restart: always
 
-
-
-  celery:
-    build:
-      context: .
-    command: celery -A tasks.tasks.celery_app worker
-    container_name: celery_app
-    depends_on:
-      - django
-      - redis
-      - db
-      - celery_beat
-    networks:
-      - scraping_network
-
-  celery_beat:
-    build:
-      context: .
-    command: celery -A tasks.tasks.celery_app beat --loglevel=INFO
-    container_name: celery_beat
-    depends_on:
-      - redis
-      - db
-      - django
-    networks:
-      - scraping_network
-
 volumes:
   data:
 
 networks:
   scraping_network:
     driver: bridge
-
