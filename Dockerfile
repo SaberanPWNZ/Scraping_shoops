@@ -1,8 +1,7 @@
 FROM python:3.9-slim
 
-WORKDIR /app/Scraping_shoops
 
-
+WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
     wget \
@@ -15,23 +14,20 @@ RUN apt-get update && apt-get install -y \
     apt-get update && apt-get install -y google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
-## Установка Chromedriver
-#RUN pip install chromedriver-autoinstaller
 
-# Копирование файлов
-COPY . /app/Scraping_shoops
-COPY requirements.txt /app/Scraping_shoops/
-COPY .env /app/Scraping_shoops/.env
+COPY . /app
+COPY requirements.txt /app/
+COPY .env /app/.env
 
-# Установка зависимостей Python
+
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Определение переменных окружения
+
 ENV PATH="/usr/local/bin:${PATH}"
 
-# Открытие порта
-EXPOSE 80
 
-# Запуск приложения
-CMD ["python", "main.py"]
+EXPOSE 8000
+
+
+CMD ["bash", "-c", "python manage.py runserver 0.0.0.0:8000"]

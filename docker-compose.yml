@@ -1,19 +1,5 @@
 
 services:
-  scraping_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: on-failure
-    container_name: scraping_app_container
-    env_file:
-      - .env
-    volumes:
-      - .:/app/Scraping_shoops
-    depends_on:
-      - redis
-    networks:
-      - scraping_network
 
   django:
     build:
@@ -27,12 +13,31 @@ services:
       - .:/app/Scraping_shoops
     depends_on:
         - db
-        - redis
-        - scraping_app
     command: [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
 
     networks:
         - scraping_network
+
+  bot:
+    image: python:3.12-slim
+    container_name: telegram_bot
+    restart: always
+    working_dir: /app/telegram_bot
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: [ "python", "bot.py" ]
+    depends_on:
+      - django
+      - db
+      - redis
+      - celery
+      - celery_beat
+    ports:
+      - "2222:2222"
+    networks:
+      - scraping_network
 
   redis:
     image: redis:6.2-alpine
@@ -64,7 +69,7 @@ services:
     command: celery -A tasks.tasks.celery_app worker
     container_name: celery_app
     depends_on:
-      - scraping_app
+      - django
       - redis
       - db
       - celery_beat
@@ -79,7 +84,7 @@ services:
     depends_on:
       - redis
       - db
-      - scraping_app
+      - django
     networks:
       - scraping_network
 
