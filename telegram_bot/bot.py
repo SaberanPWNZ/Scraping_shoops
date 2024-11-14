@@ -6,8 +6,6 @@ import os
 from aiogram import Bot, Dispatcher, types
 
 from dotenv import load_dotenv
-
-
 from telegram_bot.comands_handlers import command_router
 from telegram_bot.handlers import user_router
 from telegram_bot.midlleware import AdminOnlyMiddleware
@@ -27,3 +25,7 @@ logging.basicConfig(level=logging.INFO)
 
 async def main():
     await dp.start_polling(bot, skip_updates=True)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
