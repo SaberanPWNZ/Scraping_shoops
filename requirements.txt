@@ -111,7 +111,7 @@ wcwidth==0.2.13
 webdriver-manager==4.0.1
 websockets==14.0
 wsproto==1.2.0
-xattr==1.1.0
+xattr
 yarl==1.9.4
 zipp==3.18.1
 zope.interface==6.4.post2
