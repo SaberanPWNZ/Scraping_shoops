@@ -1,3 +1,17 @@
 from django.contrib import admin
 
-# Register your models here.
+from checker.models import ScrapedData, Partner
+
+
+class AdminPartner(admin.ModelAdmin):
+    list_display = ['name', 'web_site', 'logo']
+    list_filter = ['name']
+
+
+class AdminScrapedData(admin.ModelAdmin):
+    list_display = ['partner_name']
+    list_filter = ['last_update']
+
+
+admin.site.register(Partner, AdminPartner)
+admin.site.register(ScrapedData, AdminScrapedData)

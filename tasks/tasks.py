@@ -1,1 +1,0 @@
-from databases.db_helper import update_dbfrom databases.google_table_ranges import wacom_table_url, xp_pen_table_urlfrom tasks.beat_schedule_worker import CELERY_BEAT_SCHEDULEfrom tasks.client import celery_appCELERY_TIMEZONE = 'UTC'celery_app.conf.timezone = CELERY_TIMEZONEcelery_app.conf.beat_schedule = CELERY_BEAT_SCHEDULE

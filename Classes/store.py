@@ -77,15 +77,16 @@ class BaseStore:
                 article = elem.get('article', '').upper()
                 if not article:
                     raise ValueError(f'Article is missing or empty in element: {elem}')
-                price_partner = int(elem['price'])
+
+                price_partner = elem['price']
 
                 item = Item.objects.filter(article=article).first()
 
                 if item:
                     item_price = int(item.rrp_price)
-                    if price_partner == item_price:
+                    if int(price_partner) == item_price:
                         missing_items.append(f'✅ {article} - Ціна партнера: {price_partner} грн, РРЦ: {item_price} грн')
-                    elif price_partner < item_price:
+                    elif int(price_partner) < item_price:
                         missing_items.append(
                             f'🛑 {article} - Ціна нижча за РРЦ: {price_partner} грн, РРЦ: {item_price} грн')
                     else:

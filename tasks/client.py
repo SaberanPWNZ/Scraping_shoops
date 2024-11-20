@@ -1,1 +1,0 @@
-import osfrom celery import Celeryfrom dotenv import load_dotenvload_dotenv()REDIS_HOST = os.getenv("REDIS_ADRESS")REDIS_PORT = os.getenv("REDIS_PORT")celery_app = Celery(name='telegram_bot',                    broker_url=f'redis://redis:{REDIS_PORT}/0',                    backend_url=f'redis://redis:{REDIS_PORT}/0')

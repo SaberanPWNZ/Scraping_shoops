@@ -1,20 +1,19 @@
 import os
 from pathlib import Path
+
+from celery.schedules import crontab
 from dotenv import load_dotenv
+
+
 
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
@@ -30,10 +29,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_celery_beat',
 
     'users',
     'items',
-    'checker'
+    'checker',
+
 ]
 
 MIDDLEWARE = [
@@ -132,3 +133,28 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True
+#CELERY_IMPORTS = ('your_app_name.tasks',)
+
+
+CELERY_BEAT_SCHEDULE = {
+    'start_ktc_wacom_every_hour': {
+        'task': 'stores.KTC.ktc.start_ktc_wacom',
+        'schedule': crontab(minute='*'),  # Каждую минуту
+    },
+    'start_ktc_xp_pen_every_hour': {
+        'task': 'stores.KTC.ktc.start_ktc_xp_pen',
+        'schedule': crontab(minute='*'),  # Каждую минуту
+    },
+    'start_test_celery': {
+        'task': 'stores.KTC.ktc.celery_task_test',
+        'schedule': crontab(minute='*'),  # Каждую минуту
+    },
+}
