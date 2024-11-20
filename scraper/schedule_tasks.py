@@ -1,6 +1,6 @@
 from celery.schedules import crontab
 
-from stores.KTC.ktc import start_ktc_wacom, start_ktc_xp_pen
+from stores.KTC.tasks import start_ktc_wacom, start_ktc_xp_pen
 
 
 beat = {
