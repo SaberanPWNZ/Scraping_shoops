@@ -155,7 +155,7 @@ class BaseStore:
             status = None
             if status_locator:
                 status_element = elem.find(class_=status_locator)
-                status = status_element.get_text().strip() if status_element else None
+                status = status_element.get_text().strip() if status_element else "в наявності"
 
             card_item = {
                 'name': name,
