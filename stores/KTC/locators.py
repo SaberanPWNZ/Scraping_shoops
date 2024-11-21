@@ -6,4 +6,4 @@ class KtcLocator:
     ITEM_LOOP = 'loop'  # item card locator
     ITEM_TITLE = 'loop__title'
     ITEM_PRICE = 'loop__buy loop__buy-loop'
-    ITEM_STATUS = 'loop__pb'
+    ITEM_STATUS = 'loop__price loop__price-sold '
