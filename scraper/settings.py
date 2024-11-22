@@ -138,23 +138,9 @@ CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
 #CELERY_IMPORTS = ('your_app_name.tasks',)
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
-
-CELERY_BEAT_SCHEDULE = {
-    'start_ktc_wacom_every_hour': {
-        'task': 'stores.KTC.ktc.start_ktc_wacom',
-        'schedule': crontab(minute='*'),  # Каждую минуту
-    },
-    'start_ktc_xp_pen_every_hour': {
-        'task': 'stores.KTC.ktc.start_ktc_xp_pen',
-        'schedule': crontab(minute='*'),  # Каждую минуту
-    },
-    'start_test_celery': {
-        'task': 'stores.KTC.ktc.celery_task_test',
-        'schedule': crontab(minute='*'),  # Каждую минуту
-    },
-}

@@ -47,18 +47,17 @@ class BaseStore:
             name = elem.find(class_=title_locator).get_text()
             article = get_article_from_title(name)
             price = None
-
+            status = None
             if price_locator:
                 price_element = elem.find(class_=price_locator)
                 if price_element:
                     price = clean_price(price_element.get('data-price', '').strip().replace('.00', ''))
-            status = ''
+
             if status_locator:
                 status_element = elem.find(class_=status_locator)
                 if status_element:
                     status = status_element.get_text()
 
-            if 'Немає в наявності' not in status:
                 card_item = {
                     'name': name,
                     'price': price,
@@ -133,6 +132,40 @@ class BaseStore:
 
         sorted_items = sorted(missing_items, key=lambda x: (not x.startswith('✅'), x))
         return sorted_items
+
+    def generate_info_with_articles(self, title_locator, price_locator=None, status_locator=None,
+                                    article_extractor=None):
+        if self.all_items is None:
+            raise ValueError("Данные не загружены. Вызовите `load_items` перед генерацией информации.")
+
+        item_list = []
+        for elem in self.all_items:
+
+            name_element = elem.find(class_=title_locator)
+            name = name_element.get_text().strip() if name_element else None
+
+            article = article_extractor(name) if article_extractor and name else None
+
+            price = None
+            if price_locator:
+                price_element = elem.find(class_=price_locator)
+                price = clean_price(
+                    price_element.get('data-price', '').strip().replace('.00', '')) if price_element else None
+
+            status = None
+            if status_locator:
+                status_element = elem.find(class_=status_locator)
+                status = status_element.get_text().strip() if status_element else "в наявності"
+
+            card_item = {
+                'name': name,
+                'article': article,
+                'price': price,
+                'status': status,
+            }
+            item_list.append(card_item)
+
+        return item_list
 
 
 class Scraper:
