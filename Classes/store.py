@@ -133,7 +133,7 @@ class BaseStore:
         sorted_items = sorted(missing_items, key=lambda x: (not x.startswith('✅'), x))
         return sorted_items
 
-    def generate_info_with_articles(self, title_locator, price_locator=None, status_locator=None,
+    def generate_info_with_articles(self, title_locator=None, price_locator=None, status_locator=None,
                                     article_extractor=None):
         if self.all_items is None:
             raise ValueError("Данные не загружены. Вызовите `load_items` перед генерацией информации.")
