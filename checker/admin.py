@@ -9,7 +9,7 @@ class AdminPartner(admin.ModelAdmin):
 
 
 class AdminScrapedData(admin.ModelAdmin):
-    list_display = ['partner_name']
+    list_display = ['partner']
     list_filter = ['last_update']
 
 
