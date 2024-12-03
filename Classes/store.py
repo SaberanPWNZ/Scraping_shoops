@@ -1,9 +1,13 @@
+import logging
 import os
 import django
 from typing import List
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.db import transaction
+from django.utils.timezone import now
+
 
 from utillities import get_article_from_title, clean_price
 
@@ -13,7 +17,9 @@ if not settings.configured:
     django.setup()
 
 from items.models import Item
+from checker.models import Partner, ScrapedData, ScrapedItem
 
+logger = logging.getLogger()
 
 class BaseStore:
     def __init__(self, shop_url, headers=None, cookies=None):
@@ -166,6 +172,43 @@ class BaseStore:
             item_list.append(card_item)
 
         return item_list
+
+    def save_parsed_data(self, partner_name: str, items: list):
+        try:
+            partner, created = Partner.objects.get_or_create(name=partner_name)
+
+            with transaction.atomic():
+                scraped_data = ScrapedData.objects.create(partner=partner)
+
+                items_to_create = []
+                for item in items:
+                    existing_item = ScrapedItem.objects.filter(article=item.get('article')).first()
+                    if existing_item:
+
+                        scraped_data.items.add(existing_item)
+                    else:
+
+                        new_item = ScrapedItem(
+                            name=item.get('name'),
+                            price=item.get('price'),
+                            article=item.get('article'),
+                            status=item.get('status')
+                        )
+                        items_to_create.append(new_item)
+
+                if items_to_create:
+                    ScrapedItem.objects.bulk_create(items_to_create, ignore_conflicts=True)
+
+                new_items = ScrapedItem.objects.filter(article__in=[item.article for item in items_to_create])
+                scraped_data.items.add(*new_items)
+
+                scraped_data.last_update = now()
+                scraped_data.save()
+
+                logger.info(f"Парсинг для партнера {partner_name} завершено. Збережено {len(items)} товарів.")
+        except Exception as e:
+            logger.error(f"Помилка при збереженні даних парсингу для партнера {partner_name}: {str(e)}")
+        return items
 
 
 class Scraper:
