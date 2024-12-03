@@ -19,7 +19,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from checker import views
+
 urlpatterns = [
+    path('', views.index, name='index'),
+    path('partner/<slug:slug>/', views.partner_detail, name='partner_detail'),
+    path('about/', views.about, name='about'),
+    path('partners/', views.partners, name='partners'),
+    path('contact/', views.contact, name='contact'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('checkers/', include('checker.urls')),

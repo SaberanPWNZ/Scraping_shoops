@@ -4,14 +4,15 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
-
-
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-
+    flex-grow: 1; /* Дозволяє контейнеру розтягуватись і заповнювати простір */
 }
 
 .partner-info {
@@ -27,6 +28,10 @@ body {
     margin-left: 10px;
 }
 
+.partner-logo-right {
+    margin-top: 10px;
+    margin-left: 10px;
+}
 
 .partner-link {
     color: #007bff;
@@ -37,7 +42,6 @@ body {
     text-decoration: underline;
 }
 
-
 .table {
     margin-top: 20px;
     border-collapse: collapse;
@@ -45,8 +49,8 @@ body {
 
 .table th, .table td {
     background-color: rgba(255, 255, 255, 0.5);
+    color: #000;
 }
-
 
 .table-bordered {
     border: 1px solid #ddd;
@@ -65,7 +69,45 @@ body {
     color: white;
 }
 
-
 .text-center {
     text-align: center;
+}
+
+.scroll-to-top-btn {
+    position: fixed; /* Фіксоване позиціонування */
+    bottom: 20px;    /* Відстань від нижнього краю */
+    right: 20px;     /* Відстань від правого краю */
+    background-color: #007bff; /* Колір фону кнопки */
+    color: red;    /* Колір тексту */
+    border: none;    /* Без рамки */
+    border-radius: 50%; /* Кругла форма */
+    padding: 10px 15px; /* Відступи всередині кнопки */
+    font-size: 18px;  /* Розмір шрифта */
+    display: none;    /* Спочатку кнопка прихована */
+    cursor: pointer; /* Курсор у вигляді руки */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тінь */
+    z-index: 1000;    /* Щоб кнопка була зверху інших елементів */
+    transition: opacity 0.3s ease; /* Плавний перехід для прозорості */
+}
+
+.scroll-to-top-btn:hover {
+    background-color: #0056b3; /* Темніший відтінок при наведенні */
+}
+
+/* Футер */
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto; /* Заставляє футер завжди бути внизу */
+}
+
+footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
 }

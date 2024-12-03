@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Partner Detail: {{ partner.name }}
+{% endblock %}
+
+{% block content %}
+<div>
+    <strong>Сайт:</strong> <a href="{{ partner.web_site }}" target="_blank">{{ partner.web_site }}</a>
+</div>
+<div>
+    <p><strong>Останнє оновлення :</strong> {{ last_updated|date:"Y-m-d H:i" }}</p>
+</div>
+
+<h2>Перевірка цін <img src="{{ partner.logo.url }}" alt="Logo of {{ partner.name }}" class="partner-logo-right" width="100"></h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Назва</th>
+            <th>Ціна на сайті</th>
+            <th>РРЦ</th>
+            <th>Артикул</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in comparison_data %}
+            <tr>
+                <td>{{ entry.scraped_item.name }}</td>
+                <td>
+                    {% if entry.matching_item %}
+                        {% if entry.scraped_item.price == entry.matching_item.rrp_price %}
+                            <span style="color: green;">{{ entry.scraped_item.price }}</span>
+                        {% elif entry.scraped_item.price < entry.matching_item.rrp_price %}
+                            <span style="color: yellow;">{{ entry.scraped_item.price }}</span>
+                        {% else %}
+                            <span style="color: red;">{{ entry.scraped_item.price }}</span>
+                        {% endif %}
+                    {% else %}
+                        {{ entry.scraped_item.price }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entry.matching_item %}
+                        {{ entry.matching_item.rrp_price }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>{{ entry.scraped_item.article }}</td>
+                <td>{{ entry.scraped_item.status }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<button onclick="scrollToTop()" class="scroll-to-top-btn">↑ Повернутися вгору</button>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <button onclick="scrollToTop()" class="scroll-to-top-btn">↑ Повернутися вгору</button>
+    </footer>
+{% endblock %}
+

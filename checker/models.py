@@ -1,6 +1,8 @@
 from django.db import models
+from django.dispatch import receiver
 from django.utils.text import slugify
 from django.utils.timezone import now
+from django.db.models.signals import pre_save
 
 
 class Partner(models.Model):
@@ -13,6 +15,7 @@ class Partner(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
 
     class Meta:
         verbose_name = "Партнер"
@@ -49,3 +52,7 @@ class ScrapedData(models.Model):
     def __str__(self):
         return f"Data for {self.partner.name} - {self.created_at}"
 
+@receiver(pre_save, sender=Partner)
+def set_slug(sender, instance, **kwargs):
+        if not instance.slug:
+            instance.slug = slugify(instance.name)
