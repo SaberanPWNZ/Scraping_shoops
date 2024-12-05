@@ -16,7 +16,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scraper.settings")
 if not settings.configured:
     django.setup()
 
-from items.models import Item
+from items.models import Item, Brand
 from checker.models import Partner, ScrapedData, ScrapedItem
 
 logger = logging.getLogger()
@@ -173,42 +173,43 @@ class BaseStore:
 
         return item_list
 
-    def save_parsed_data(self, partner_name: str, items: list):
+    def save_parsed_data(self, partner_name: str, items: list, brand: str):
         try:
-            partner, created = Partner.objects.get_or_create(name=partner_name)
+            partner, _ = Partner.objects.get_or_create(name=partner_name)
+            brand_obj = Brand.objects.filter(name=brand).first()
+            if not brand_obj:
+                raise ValueError(f"Бренд {brand} не найден в базе данных.")
 
             with transaction.atomic():
                 scraped_data = ScrapedData.objects.create(partner=partner)
 
-                items_to_create = []
-                for item in items:
-                    existing_item = ScrapedItem.objects.filter(article=item.get('article')).first()
-                    if existing_item:
+                existing_articles = {item.article for item in
+                                     ScrapedItem.objects.filter(article__in=[i['article'] for i in items])}
 
-                        scraped_data.items.add(existing_item)
-                    else:
+                new_items = [
+                    ScrapedItem(
+                        name=item['name'],
+                        price=item['price'],
+                        article=item['article'],
+                        status=item['status'],
+                        brand=brand_obj
+                    )
+                    for item in items if item['article'] not in existing_articles
+                ]
 
-                        new_item = ScrapedItem(
-                            name=item.get('name'),
-                            price=item.get('price'),
-                            article=item.get('article'),
-                            status=item.get('status')
-                        )
-                        items_to_create.append(new_item)
+                if new_items:
+                    ScrapedItem.objects.bulk_create(new_items, ignore_conflicts=True)
 
-                if items_to_create:
-                    ScrapedItem.objects.bulk_create(items_to_create, ignore_conflicts=True)
+                all_items = ScrapedItem.objects.filter(article__in=[item['article'] for item in items])
 
-                new_items = ScrapedItem.objects.filter(article__in=[item.article for item in items_to_create])
-                scraped_data.items.add(*new_items)
-
+                scraped_data.items.add(*all_items)
                 scraped_data.last_update = now()
                 scraped_data.save()
 
-                logger.info(f"Парсинг для партнера {partner_name} завершено. Збережено {len(items)} товарів.")
+
         except Exception as e:
-            logger.error(f"Помилка при збереженні даних парсингу для партнера {partner_name}: {str(e)}")
-        return items
+            print(f"Ошибка: {str(e)}")
+            raise
 
 
 class Scraper:

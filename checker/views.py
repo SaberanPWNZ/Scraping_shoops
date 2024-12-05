@@ -1,35 +1,45 @@
-
 from django.utils.timezone import localtime
 from django.views.generic import TemplateView
 
-from checker.models import ScrapedData, Partner
+from checker.models import ScrapedData, Partner, ScrapedItem
 from django.shortcuts import render, get_object_or_404
 
-from items.models import Item
+from items.models import Item, Brand
 
 
 def index(request):
     partners = Partner.objects.all()
     return render(request, 'index.html', {'partners': partners})
 
+
 def about(request):
     return render(request, 'about.html')
 
+
 def partners(request):
     return render(request, 'partners.html')
+
 
 def contact(request):
     return render(request, 'contact.html')
 
 
-
 def partner_detail(request, slug):
     partner = get_object_or_404(Partner, slug=slug)
-    scraped_data = partner.scraped_data.prefetch_related('items')
+    scraped_data = partner.scraped_data.prefetch_related('items__brand')
+
+    freshest_data = []
+    brands_to_include = Brand.objects.all()
+
+
+    for brand in brands_to_include:
+        latest_entry = scraped_data.filter(items__brand=brand).order_by('-created_at').first()
+        if latest_entry:
+            freshest_data.append(latest_entry)
 
     comparison_data = []
-    for data in scraped_data:
-        for scraped_item in data.items.all():
+    for data in freshest_data:
+        for scraped_item in data.items.filter(brand__in=brands_to_include):
             try:
                 matching_item = Item.objects.get(article=scraped_item.article)
             except Item.DoesNotExist:
@@ -43,8 +53,10 @@ def partner_detail(request, slug):
     return render(request, 'partner_detail.html', {
         'partner': partner,
         'comparison_data': comparison_data,
-        'last_updated': scraped_data.order_by('-last_update').first().last_update if scraped_data else None,
+        'last_updated': max([data.last_update for data in freshest_data], default=None),
     })
+
+
 
 
 class DataTableView(TemplateView):
@@ -80,3 +92,7 @@ class PartnerTableView(TemplateView):
         context['partner'] = partner
         context['last_updated'] = localtime(last_updated) if last_updated else None
         return context
+
+
+
+
