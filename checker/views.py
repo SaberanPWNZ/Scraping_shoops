@@ -31,7 +31,6 @@ def partner_detail(request, slug):
     freshest_data = []
     brands_to_include = Brand.objects.all()
 
-
     for brand in brands_to_include:
         latest_entry = scraped_data.filter(items__brand=brand).order_by('-created_at').first()
         if latest_entry:
@@ -49,14 +48,13 @@ def partner_detail(request, slug):
                 'scraped_item': scraped_item,
                 'matching_item': matching_item,
             })
+            print(matching_item)
 
     return render(request, 'partner_detail.html', {
         'partner': partner,
         'comparison_data': comparison_data,
         'last_updated': max([data.last_update for data in freshest_data], default=None),
     })
-
-
 
 
 class DataTableView(TemplateView):
@@ -92,7 +90,3 @@ class PartnerTableView(TemplateView):
         context['partner'] = partner
         context['last_updated'] = localtime(last_updated) if last_updated else None
         return context
-
-
-
-

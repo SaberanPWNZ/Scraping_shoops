@@ -10,7 +10,7 @@ app = Celery('scraper', broker=os.getenv('CELERY_BROKER_URL'))
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(['stores.KTC', 'stores.Auchan', 'stores.Brain', 'stores.CAN',
                         'stores.Citrus', 'stores.Click', 'stores.Comtrading', 'stores.Foxtrot',
-                        'stores.Moyo', 'stores.Portativ', 'stores.Setevuha', 'stores.WO'])
+                        'stores.Moyo', 'stores.Portativ', 'stores.Setevuha', 'stores.WO', 'stores.EXE'])
 
 #celery -A myapp.celeryapp worker --loglevel=info -P eventlet
 
