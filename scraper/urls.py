@@ -20,9 +20,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from checker import views
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
+from users.views import UserCreateView, UserLoginView
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('partner/<slug:slug>/', views.partner_detail, name='partner_detail'),
     path('about/', views.about, name='about'),
     path('partners/', views.partners, name='partners'),
@@ -30,6 +38,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('checkers/', include('checker.urls')),
+    path('register/', UserCreateView.as_view(), name='register'),
+    path('login/', UserLoginView.as_view(), name='login'),
 
 ]
 

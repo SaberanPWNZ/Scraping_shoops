@@ -1,33 +1,56 @@
 from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password
+from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from users.models import User
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    user_phone = serializers.CharField(max_length=20, required=False)
-    email = serializers.EmailField(max_length=100, required=True)
-    telegram_id = serializers.CharField(max_length=50, required=True)
-    username = serializers.CharField(max_length=50, required=False)
-    first_name = serializers.CharField(max_length=50, required=False)
-    last_name = serializers.CharField(max_length=50, required=False)
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('user_phone', 'email', 'telegram_id', 'username', 'first_name', 'last_name', 'password')
+        fields = ['email', 'password', 'telegram_id', 'username', 'first_name', 'last_name', 'user_phone']
 
-    def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("This email is already registered.")
-        return value
-
-    def validate_telegram_id(self, value):
-        if User.objects.filter(telegram_id=value).exists():
-            raise serializers.ValidationError("This Telegram ID is already registered.")
+    def validate_password(self, value):
+        try:
+            validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(f"Password validation error: {', '.join(e.messages)}")
         return value
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
+        user = User.objects.create_user(**validated_data)
         return user
+
+
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User with this email does not exist.")
+
+        if not user.check_password(password):
+            raise serializers.ValidationError("Incorrect password.")
+
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        return {
+            'access_token': access_token,
+            'user': user
+        }
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name', 'user_phone', 'telegram_id', 'created_at']

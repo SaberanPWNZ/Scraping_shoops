@@ -1,15 +1,45 @@
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
-from users.models import User
-from .serializers import UserCreateSerializer
+from rest_framework import status, permissions
+
+from users.serializers import UserLoginSerializer, UserSerializer
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from users.serializers import UserCreateSerializer
+
+class UserCreateView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = UserCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+
+            return Response({
+                'message': 'User created successfully.',
+                'access_token': access_token
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserCreateView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserCreateSerializer
-    permission_classes = [AllowAny]
+class UserLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+
+            access_token = data['access_token']
+            user = data['user']
 
 
-from django.shortcuts import render
+            return Response({
+                'access_token': access_token,
+                'user': UserSerializer(user).data,
+            }, status=status.HTTP_200_OK)
 
-# Create your views here.
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
