@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.utils.timezone import localtime
 from django.views.generic import TemplateView
 
@@ -24,9 +25,11 @@ def contact(request):
     return render(request, 'contact.html')
 
 
+@login_required()
 def partner_detail(request, slug):
     partner = get_object_or_404(Partner, slug=slug)
     scraped_data = partner.scraped_data.prefetch_related('items__brand')
+    print(f'{request.user.is_authenticated}')
 
     freshest_data = []
     brands_to_include = Brand.objects.all()
@@ -48,7 +51,6 @@ def partner_detail(request, slug):
                 'scraped_item': scraped_item,
                 'matching_item': matching_item,
             })
-            print(matching_item)
 
     return render(request, 'partner_detail.html', {
         'partner': partner,
