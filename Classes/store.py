@@ -1,9 +1,13 @@
+import logging
 import os
 import django
 from typing import List
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.db import transaction
+from django.utils.timezone import now
+
 
 from utillities import get_article_from_title, clean_price
 
@@ -12,8 +16,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scraper.settings")
 if not settings.configured:
     django.setup()
 
-from items.models import Item
+from items.models import Item, Brand
+from checker.models import Partner, ScrapedData, ScrapedItem
 
+logger = logging.getLogger()
 
 class BaseStore:
     def __init__(self, shop_url, headers=None, cookies=None):
@@ -166,6 +172,44 @@ class BaseStore:
             item_list.append(card_item)
 
         return item_list
+
+    def save_parsed_data(self, partner_name: str, items: list, brand: str):
+        try:
+            partner, _ = Partner.objects.get_or_create(name=partner_name)
+            brand_obj = Brand.objects.filter(name=brand).first()
+            if not brand_obj:
+                raise ValueError(f"Бренд {brand} не найден в базе данных.")
+
+            with transaction.atomic():
+                scraped_data = ScrapedData.objects.create(partner=partner)
+
+                existing_articles = {item.article for item in
+                                     ScrapedItem.objects.filter(article__in=[i['article'] for i in items])}
+
+                new_items = [
+                    ScrapedItem(
+                        name=item['name'],
+                        price=item['price'],
+                        article=item['article'],
+                        status=item['status'],
+                        brand=brand_obj
+                    )
+                    for item in items if item['article'] not in existing_articles
+                ]
+
+                if new_items:
+                    ScrapedItem.objects.bulk_create(new_items, ignore_conflicts=True)
+
+                all_items = ScrapedItem.objects.filter(article__in=[item['article'] for item in items])
+
+                scraped_data.items.add(*all_items)
+                scraped_data.last_update = now()
+                scraped_data.save()
+
+
+        except Exception as e:
+            print(f"Ошибка: {str(e)}")
+            raise
 
 
 class Scraper:
