@@ -73,7 +73,7 @@ class User(AbstractBaseUser):
         ],
     )
     email = models.EmailField(max_length=100, unique=True, blank=False)
-    telegram_id = models.CharField(max_length=50, blank=False, unique=True)
+    telegram_id = models.CharField(max_length=50, default=None, null=True)
     username = models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
@@ -81,6 +81,10 @@ class User(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(null=True, blank=True)
+
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Користувач"
@@ -93,8 +97,14 @@ class User(AbstractBaseUser):
 
     objects = CustomUserManager()
 
-
-
     def __str__(self):
-        """Return a string representation of the user."""
+
         return self.email
+
+    def has_perm(self, perm, obj=None):
+        """Разрешения для конкретного действия"""
+        return self.is_superuser
+
+    def has_module_perms(self, app_label):
+        """Разрешения для конкретного приложения"""
+        return self.is_superuser

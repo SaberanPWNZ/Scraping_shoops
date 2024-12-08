@@ -1,11 +1,14 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import localtime
 from django.views.generic import TemplateView
 
 from checker.models import ScrapedData, Partner, ScrapedItem
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from items.models import Item, Brand
+from users.forms import UserRegistrationForm
 
 
 def index(request):
@@ -25,7 +28,43 @@ def contact(request):
     return render(request, 'contact.html')
 
 
-@login_required()
+@login_required
+def profile_view(request):
+    return render(request, 'profile.html')
+
+
+
+def user_register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            user = authenticate(username=user.username, password=form.cleaned_data['password'])
+
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Реєстрація пройшла успішно')
+                return redirect('home')
+            else:
+                messages.error(request, 'Помилка аутентифікації. Спробуйте ще раз.')
+                return redirect('register')
+        else:
+            messages.error(request, 'Помилка реєстрації. Перевірте введені дані.')
+    else:
+        form = UserRegistrationForm()
+
+    return render(request, 'user_register.html', {'form': form})
+
+
+
+@login_required
+def profile_edit_view(request):
+    # Логика для редактирования профиля
+    return render(request, 'profile_edit.html')
+
+
 def partner_detail(request, slug):
     partner = get_object_or_404(Partner, slug=slug)
     scraped_data = partner.scraped_data.prefetch_related('items__brand')

@@ -4,6 +4,8 @@ from pathlib import Path
 from celery.schedules import crontab
 from dotenv import load_dotenv
 
+
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -102,6 +104,8 @@ REST_FRAMEWORK = {
 
 }
 
+# AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
+AUTH_USER_MODEL = 'users.User'
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 

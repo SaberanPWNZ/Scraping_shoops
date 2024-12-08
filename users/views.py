@@ -1,11 +1,14 @@
 from rest_framework import status, permissions
-
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 from users.serializers import UserLoginSerializer, UserSerializer
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from users.serializers import UserCreateSerializer
+
 
 class UserCreateView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -36,10 +39,24 @@ class UserLoginView(APIView):
             access_token = data['access_token']
             user = data['user']
 
-
             return Response({
                 'access_token': access_token,
                 'user': UserSerializer(user).data,
             }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Невірний логін або пароль.')
+
+    return render(request, 'login.html', {'user': request.user})

@@ -1,0 +1,6 @@
+.error-message {
+    text-align: center; /* Центрирование текста */
+    color: red; /* Цвет текста */
+    font-weight: bold; /* Жирный текст */
+    margin-top: 10px; /* Отступ сверху */
+}

@@ -111,3 +111,8 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+.login-form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    height: 20
+    }
