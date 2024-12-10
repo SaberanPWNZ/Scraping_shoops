@@ -12,7 +12,7 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    flex-grow: 1; /* Дозволяє контейнеру розтягуватись і заповнювати простір */
+    flex-grow: 1;
 }
 
 .partner-info {
@@ -47,7 +47,8 @@ body {
     border-collapse: collapse;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     background-color: rgba(255, 255, 255, 0.5);
     color: #000;
 }
@@ -75,18 +76,18 @@ body {
 
 .scroll-to-top-btn {
     position: fixed; /* Фіксоване позиціонування */
-    bottom: 20px;    /* Відстань від нижнього краю */
-    right: 20px;     /* Відстань від правого краю */
+    bottom: 20px; /* Відстань від нижнього краю */
+    right: 20px; /* Відстань від правого краю */
     background-color: #007bff; /* Колір фону кнопки */
-    color: red;    /* Колір тексту */
-    border: none;    /* Без рамки */
+    color: red; /* Колір тексту */
+    border: none; /* Без рамки */
     border-radius: 50%; /* Кругла форма */
     padding: 10px 15px; /* Відступи всередині кнопки */
-    font-size: 18px;  /* Розмір шрифта */
-    display: none;    /* Спочатку кнопка прихована */
+    font-size: 18px; /* Розмір шрифта */
+    display: none; /* Спочатку кнопка прихована */
     cursor: pointer; /* Курсор у вигляді руки */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тінь */
-    z-index: 1000;    /* Щоб кнопка була зверху інших елементів */
+    z-index: 1000; /* Щоб кнопка була зверху інших елементів */
     transition: opacity 0.3s ease; /* Плавний перехід для прозорості */
 }
 
@@ -111,8 +112,9 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+
 .login-form-container {
     max-width: 400px;
     margin: 0 auto;
-    height: 20
-    }
+    height: 20;
+}

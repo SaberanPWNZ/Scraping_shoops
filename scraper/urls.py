@@ -34,7 +34,6 @@ urlpatterns = [
     path('partner/<slug:slug>/', views.partner_detail, name='partner_detail'),
     path('about/', views.about, name='about'),
     path('partners/', views.partners, name='partners'),
-    path('contact/', views.contact, name='contact'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('checkers/', include('checker.urls')),

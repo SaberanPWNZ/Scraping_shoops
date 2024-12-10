@@ -10,25 +10,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center">Список партнерів</h1>
-    <div class="row mt-4">
-        {% for partner in partners %}
-        <div class="col-md-4 text-center mb-4">
-            <div class="card shadow-sm">
-                {% if partner.logo %}
-                <img src="{{ partner.logo.url }}" class="card-img-top" alt="{{ partner.name }}">
-                {% else %}
-                <div class="card-img-top"></div>
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ partner.name }}</h5>
-                    <p><a href="{{ partner.web_site }}" target="_blank">Перейти на сайт</a></p>
-                    <a href="{% url 'partner_detail' partner.slug %}" class="btn btn-primary">Перевірити ціни</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+<div>
+    Головна сторінка проекту - тут буде стрічка новин.
 </div>
+
 {% endblock %}
