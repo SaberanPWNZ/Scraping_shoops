@@ -46,34 +46,27 @@ class UserRegistrationForm(forms.ModelForm):
 
         return email
 
+
 class UserChangeProfile(forms.ModelForm):
-    name = forms.CharField(
+    first_name = forms.CharField(
         max_length=100,
-        help_text="введіть ім`я",
+        help_text="Введіть ім'я",
         initial='',
     )
     email = forms.EmailField(
-        help_text="введіть електронну адресу",
+        help_text="Введіть електронну адресу",
     )
     last_name = forms.CharField(
         max_length=100,
         required=False,
-        help_text="введіть прізвище",
+        help_text="Введіть прізвище",
     )
     user_phone = forms.CharField(
         max_length=15,
         required=False,
-        help_text="введіть номер телефону",
-    )
-    telegram_id = forms.CharField(
-        max_length=10,
-        required=False,
-        help_text="введіть ID користувача телеграм"
+        help_text="Введіть номер телефону",
     )
 
     class Meta:
         model = User
-        fields = ['name', 'email', 'last_name', 'user_phone']
-
-
-
+        fields = ['first_name', 'email', 'last_name', 'user_phone']

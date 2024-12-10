@@ -27,15 +27,7 @@ def partners(request):
 @user_passes_test(lambda u: u.is_staff)
 @login_required
 def profile_view(request):
-    if request.method == 'POST':
-        form = UserChangeProfile(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-    else:
-        form = UserChangeProfile(instance=request.user)
-
-    return render(request, 'profile.html', {'form': form})
+    return render(request, 'profile.html', {'user': request.user})
 
 
 def user_register(request):
@@ -69,10 +61,17 @@ def user_register(request):
 @login_required
 def profile_edit_view(request):
     if request.method == 'POST':
-        if request.user.is_authenticated:
-            change = request
-            messages.success(request, 'данні успішно збережені')
-    return render(request, 'profile.html')
+        form = UserChangeProfile(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Дані успішно збережені.')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Будь ласка, виправте помилки у формі.')
+    else:
+        form = UserChangeProfile(instance=request.user)
+
+    return render(request, 'profile_edit.html', {'form': form})
 
 
 @login_required
