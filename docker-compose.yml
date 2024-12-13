@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: on-failure
+    restart: always
     container_name: django-container
     env_file:
       - .env
@@ -15,22 +15,10 @@ services:
       - "8000:8000"
     networks:
       - scraping_network
-
-#  bot:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    restart: always
-#    container_name: telegram_bot
-#    env_file:
-#      - .env
-#    volumes:
-#      - .:/app
-#    ports:
-#      - "2222:2222"
-#    networks:
-#      - scraping_network
-
+    depends_on:
+      - db
+      - redis
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
   redis:
     image: redis:6.2-alpine
@@ -53,6 +41,40 @@ services:
     networks:
       - scraping_network
     restart: always
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_container
+    restart: always
+    command: celery -A scraper.celery_config worker --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - .:/app
+    networks:
+      - scraping_network
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_beat_container
+    restart: always
+    command: celery -A scraper.celery_config beat --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - .:/app
+    networks:
+      - scraping_network
 
 volumes:
   data:

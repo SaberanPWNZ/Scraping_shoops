@@ -20,122 +20,149 @@ cron_time_default = '5'
 app.conf.beat_schedule = {
     'start_ktc_wacom_every_hour': {
         'task': 'stores.KTC.tasks.start_ktc_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_ktc_xp_pen_every_hour': {
         'task': 'stores.KTC.tasks.start_ktc_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_auchan_wacom': {
         'task': 'stores.Auchan.tasks.start_auchan_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_brain_wacom': {
         'task': 'stores.Brain.tasks.start_brain_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_brain_xp_pen': {
         'task': 'stores.Brain.tasks.start_brain_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_can_wacom': {
         'task': 'stores.CAN.tasks.start_can_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_can_xp_pen': {
         'task': 'stores.CAN.tasks.start_can_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_citrus_wacom': {
         'task': 'stores.Citrus.tasks.start_citrus_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_citrus_xp_pen': {
         'task': 'stores.Citrus.tasks.start_citrus_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_click_wacom': {
         'task': 'stores.Click.tasks.start_click_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_click_xp_pen': {
         'task': 'stores.Click.tasks.start_click_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_comtrading_wacom': {
         'task': 'stores.Comtrading.tasks.start_comtrading_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_comtrading_xp_pen': {
         'task': 'stores.Comtrading.tasks.start_comtrading_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_exe_wacom': {
         'task': 'stores.EXE.tasks.start_exe_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_exe_xp_pen': {
         'task': 'stores.EXE.tasks.start_exe_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_foxtrot_wacom': {
         'task': 'stores.Foxtrot.tasks.start_foxtrot_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_foxtrot_xp_pen': {
         'task': 'stores.Foxtrot.tasks.start_foxtrot_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
 
     'start_moyo_wacom': {
         'task': 'stores.Moyo.tasks.start_moyo',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_portativ_wacom': {
         'task': 'stores.Portativ.tasks.start_portativ_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_portativ_xp_pen': {
         'task': 'stores.Portativ.tasks.start_portativ_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
     'start_setevuha_wacom': {
         'task': 'stores.Setevuha.tasks.start_setevuha',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
     'start_wo_wacom': {
         'task': 'stores.WO.tasks.start_wo_wacom',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
     'start_wo_xp_pen': {
         'task': 'stores.WO.tasks.start_wo_xp_pen',
-        'schedule': crontab(minute='*'),
+        'schedule': crontab(minute=cron_time_default),
     },
 
 
+    'start_fotos_wacom': {
+        'task': 'stores.F.tasks.start_fotos',
+        'schedule': crontab(minute=cron_time_default),
+    },
+    'start_fotos_xp_pen': {
+        'task': 'stores.F.tasks.start_fotos_xp_pen',
+        'schedule': crontab(minute=cron_time_default),
+    },
+
+    'start_rozetka_wacom': {
+        'task': 'stores.Rozetka.tasks.start_rozetka_wacom',
+        'schedule': crontab(minute=cron_time_default),
+    },
+    'start_rozetka_xp_pen': {
+        'task': 'stores.Rozetka.tasks.start_rozetka_xp_pen',
+        'schedule': crontab(minute=cron_time_default),
+    },
+
+
+    'start_mta_wacom': {
+        'task': 'stores.MTA.tasks.start_mta_wacom',
+        'schedule': crontab(minute=cron_time_default),
+    },
+    'start_mta_xp_pen': {
+        'task': 'stores.MTA.tasks.start_mta_xp_pen',
+        'schedule': crontab(minute=cron_time_default),
+    },
 
 
 
