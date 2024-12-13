@@ -11,7 +11,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(['stores.KTC', 'stores.Auchan', 'stores.Brain', 'stores.CAN',
                         'stores.Citrus', 'stores.Click', 'stores.Comtrading', 'stores.Foxtrot',
                         'stores.Moyo', 'stores.Portativ', 'stores.Setevuha', 'stores.WO', 'stores.EXE',
-                        'stores.F', 'stores.Rozetka', 'stores.Comfy'])
+                        'stores.F', 'stores.Rozetka', 'stores.Comfy', 'stores.MTA'])
 
 #celery -A myapp.celeryapp worker --loglevel=info -P eventlet
 
