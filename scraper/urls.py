@@ -29,8 +29,6 @@ from checker import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('partner/<slug:slug>/', views.partner_detail, name='partner_detail'),
     path('about/', views.about, name='about'),
     path('partners/', views.partners, name='partners'),
