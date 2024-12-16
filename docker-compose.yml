@@ -59,6 +59,7 @@ services:
     depends_on:
       - redis
       - db
+      - django
     volumes:
       - .:/app
     networks:
@@ -76,6 +77,7 @@ services:
     depends_on:
       - redis
       - db
+      - django
     volumes:
       - .:/app
     networks:
