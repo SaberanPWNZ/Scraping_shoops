@@ -10,16 +10,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from items.models import Item, Brand
 from users.forms import UserRegistrationForm, UserChangeProfile
 
-
+@login_required()
 def index(request):
     partners = Partner.objects.all()
     return render(request, 'index.html', {'partners': partners})
 
-
+@login_required()
 def about(request):
     return render(request, 'about.html')
 
-
+@login_required()
 def partners(request):
     return render(request, 'partners.html')
 
