@@ -4,6 +4,7 @@ from django.urls import path
 from checker.views import profile_view, profile_edit_view, user_register
 from .views import login_view
 
+
 urlpatterns = [
     path('register/', user_register, name='signup'),
     path('login/', login_view, name='login'),
