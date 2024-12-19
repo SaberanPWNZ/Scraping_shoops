@@ -1,5 +1,7 @@
 import re
 
+from checker.models import ScrapedItem
+
 
 def get_article_from_title(title: str):
     if '(' not in title:
@@ -15,6 +17,7 @@ def clean_price(price: str):
 def create_message(shop_name, text, brand_name):
     answer = '\n'.join([str(item) for item in text])
     return f"🛒 {shop_name}/{brand_name}:\n\n{answer}"
+
 
 def custom_article_extractor(name, articles_dict):
     return articles_dict.get(name, get_article_from_title(name))

@@ -8,7 +8,6 @@ from django.conf import settings
 from django.db import transaction
 from django.utils.timezone import now
 
-
 from utillities import get_article_from_title, clean_price
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scraper.settings")
@@ -70,6 +69,7 @@ class BaseStore:
                     'article': article,
                     'status': status,
                 }
+                print(card_item)
                 item_list.append(card_item)
 
         return item_list

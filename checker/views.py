@@ -1,15 +1,22 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.urls import reverse_lazy
+
 from django.utils.timezone import localtime
 from django.views.generic import TemplateView
-
-from checker.models import ScrapedData, Partner, ScrapedItem
 from django.shortcuts import render, get_object_or_404, redirect
 
+from checker.models import Partner, ScrapedItem, ScrapedData
 from items.models import Item, Brand
 from users.forms import UserRegistrationForm, UserChangeProfile
+from django import template
+
+register = template.Library()
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key, "N/A")
 
 
 @login_required(login_url='/users/login/')
@@ -18,12 +25,38 @@ def index(request):
     return render(request, 'index.html', {'partners': partners})
 
 
-def about(request):
-    return render(request, 'about.html')
+
+def dashboard_view(request):
+
+    items_from_db = Item.objects.all()
+    partners = Partner.objects.all()
+    scraped_data = ScrapedData.objects.prefetch_related('items')
+
+    comparison_data = {}
+    for item in items_from_db:
+        partner_prices = {}
+        for partner in partners:
+            partner_data = scraped_data.filter(partner=partner).first()
+            if partner_data:
+                # Поиск ScrapedItem по артикулу
+                scraped_item = partner_data.items.filter(article=item.article).first()
+                partner_prices[partner.name] = scraped_item.price if scraped_item else None
+            else:
+                partner_prices[partner.name] = None
+        comparison_data[item.article] = partner_prices
+
+    context = {
+        'partners': partners,
+        'comparison_data': comparison_data,
+        'items_from_db': items_from_db,
+    }
+    return render(request, 'dashboard.html', context)
+
 
 
 def partners(request):
-    return render(request, 'partners.html')
+    partners = Partner.objects.all()
+    return render(request, 'partners.html', {'partners':partners})
 
 
 @user_passes_test(lambda u: u.is_staff)

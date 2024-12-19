@@ -11,7 +11,7 @@ from checker import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('partner/<slug:slug>/', views.partner_detail, name='partner_detail'),
-    path('about/', views.about, name='about'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
     path('partners/', views.partners, name='partners'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),

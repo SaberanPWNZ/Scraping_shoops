@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load custom_filters %}
+
+{% block title %}Дашборд партнеров{% endblock %}
+
+{% block content %}
+<h2>Порівняльна таблиця</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Назва товару</th>
+            {% for partner in partners %}
+                <th>{{ partner.name }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items_from_db %}
+        <tr>
+            <td>{{ item.title }} ({{ item.article }}) РРЦ: {{ item.rrp_price }} </td>
+            {% for partner in partners %}
+                <td>
+                    {% with price=comparison_data|get_item:item.article|get_item:partner.name %}
+                        {{ price|default:"-" }}
+                    {% endwith %}
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
