@@ -109,7 +109,6 @@ def profile_edit_view(request):
     return render(request, 'profile_edit.html', {'form': form})
 
 
-@login_required
 def partner_detail(request, slug):
     partner = get_object_or_404(Partner, slug=slug)
     scraped_data = partner.scraped_data.prefetch_related('items__brand')

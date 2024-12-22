@@ -65,6 +65,16 @@ body {
     background-color: #f1f1f1;
 }
 
+.table {
+    font-size: 12px; /* Уменьшите размер шрифта, например до 12px */
+}
+
+.table th,
+.table td {
+    padding: 5px; /* Уменьшите внутренние отступы ячеек */
+}
+
+
 .table-dark {
     background-color: #343a40;
     color: white;

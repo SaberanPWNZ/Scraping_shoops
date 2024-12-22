@@ -8,6 +8,7 @@ from django.conf import settings
 from django.db import transaction
 from django.utils.timezone import now
 
+from Classes.status import Status
 from utillities import get_article_from_title, clean_price
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scraper.settings")
@@ -161,7 +162,7 @@ class BaseStore:
             status = None
             if status_locator:
                 status_element = elem.find(class_=status_locator)
-                status = status_element.get_text().strip() if status_element else "в наявності"
+                status = Status.not_in_stock if status_element else Status.in_stock
 
             card_item = {
                 'name': name,

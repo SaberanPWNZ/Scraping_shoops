@@ -5,30 +5,40 @@
 {% block title %}Дашборд партнеров{% endblock %}
 
 {% block content %}
-<h2>Порівняльна таблиця</h2>
+    {% if not user.is_staff %}
+        <div class="alert alert-danger" role="alert">
+            Доступ до цієї сторінки закритий. Ви повинні бути частиною команди Новелла для перегляду цієї інформації.
+        </div>
+    {% else %}
+        <h2>Порівняльна таблиця</h2>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Назва товару</th>
-            {% for partner in partners %}
-                <th>{{ partner.name }}</th>
-            {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in items_from_db %}
-        <tr>
-            <td>{{ item.title }} ({{ item.article }}) РРЦ: {{ item.rrp_price }} </td>
-            {% for partner in partners %}
-                <td>
-                    {% with price=comparison_data|get_item:item.article|get_item:partner.name %}
-                        {{ price|default:"-" }}
-                    {% endwith %}
-                </td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Назва товару</th>
+                    {% for partner in partners %}
+                        <th>{{ partner.name|default:"Невідомий партнер" }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items_from_db %}
+                    <tr>
+                        <td>
+                            {{ item.title|default:"Без назви" }}
+                            ({{ item.article|default:"-" }})
+                            РРЦ: {{ item.rrp_price|default:"-" }}
+                        </td>
+                        {% for partner in partners %}
+                            <td>
+                                {% with price=comparison_data|get_item:item.article|get_item:partner.name %}
+                                    {{ price|default:"-" }}
+                                {% endwith %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}
