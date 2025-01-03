@@ -9,6 +9,7 @@ from django.db import transaction
 from django.utils.timezone import now
 
 from Classes.status import Status
+from checker.models import Partner, PartnerItem
 from utillities import get_article_from_title, clean_price
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scraper.settings")
@@ -17,9 +18,9 @@ if not settings.configured:
     django.setup()
 
 from items.models import Item, Brand
-from checker.models import Partner, ScrapedData, ScrapedItem
 
 logger = logging.getLogger()
+
 
 class BaseStore:
     def __init__(self, shop_url, headers=None, cookies=None):
@@ -174,43 +175,40 @@ class BaseStore:
 
         return item_list
 
-    def save_parsed_data(self, partner_name: str, items: list, brand: str):
-        try:
-            partner, _ = Partner.objects.get_or_create(name=partner_name)
-            brand_obj = Brand.objects.filter(name=brand).first()
-            if not brand_obj:
-                raise ValueError(f"Бренд {brand} не найден в базе данных.")
+    def save_parsed_data(self, partner_name, items, brand):
 
-            with transaction.atomic():
-                scraped_data = ScrapedData.objects.create(partner=partner)
+        brand = Brand.objects.filter(name=brand).first()
 
-                existing_articles = {item.article for item in
-                                     ScrapedItem.objects.filter(article__in=[i['article'] for i in items])}
+        if not brand:
+            raise ValueError(f"Бренд '{brand}' не найден.")
 
-                new_items = [
-                    ScrapedItem(
-                        name=item['name'],
-                        price=item['price'],
-                        article=item['article'],
-                        status=item['status'],
-                        brand=brand_obj
-                    )
-                    for item in items if item['article'] not in existing_articles
-                ]
+        partner = Partner.objects.filter(name=partner_name).first()
+        if not partner:
+            partner = Partner.objects.create(name=partner_name)
 
-                if new_items:
-                    ScrapedItem.objects.bulk_create(new_items, ignore_conflicts=True)
+        for item in items:
+            article = item.get('article')
+            price = item.get('price')
 
-                all_items = ScrapedItem.objects.filter(article__in=[item['article'] for item in items])
+            if not article:
+                print(f"Пропущен товар с некорректным article: {item}")
+                continue
 
-                scraped_data.items.add(*all_items)
-                scraped_data.last_update = now()
-                scraped_data.save()
+            if price is None or price == "":
+                print(f"Цена для товара {article} не указана.")
+                continue
 
+            partner_item = PartnerItem.objects.get_or_create(
+                partner=partner,
+                article=article,
+                defaults={'price': price, 'status': item.get('status', True)}
+            )
 
-        except Exception as e:
-            print(f"Ошибка: {str(e)}")
-            raise
+            if not partner_item:
+                partner_item.price = price
+                partner_item.availability = item.get('status', True)
+                partner_item.last_updated = now()
+                partner_item.save()
 
 
 class Scraper:

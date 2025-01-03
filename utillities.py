@@ -1,7 +1,5 @@
 import re
 
-from checker.models import ScrapedItem
-
 
 def get_article_from_title(title: str):
     if '(' not in title:

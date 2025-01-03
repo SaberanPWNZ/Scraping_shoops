@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from checker.models import ScrapedData, Partner
+from checker.models import Partner
 from items.models import Brand
 
 
@@ -9,9 +9,6 @@ class AdminPartner(admin.ModelAdmin):
     list_filter = ['name']
 
 
-class AdminScrapedData(admin.ModelAdmin):
-    list_display = ['partner']
-    list_filter = ['last_update']
 
 
 class AdminBrand(admin.ModelAdmin):
@@ -19,5 +16,4 @@ class AdminBrand(admin.ModelAdmin):
 
 
 admin.site.register(Partner, AdminPartner)
-admin.site.register(ScrapedData, AdminScrapedData)
 admin.site.register(Brand, AdminBrand)

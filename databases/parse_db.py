@@ -92,25 +92,26 @@ class GoogleSheet:
             }
             items.append(clear_data)
         return items
+
     def clear_info_from_sheets_lists_for_xppen(self, list_of_items: list):
-            items = []
-            try:
-                for item in list_of_items:
-                    if len(item[1]) > 0:
-                        price_raw = item[8]
-                        price_clean = (re.sub(r'\xa0', '', price_raw).strip().
-                                       replace(',00', '').replace(' ', ''))
-                        if item[3] == '' or item[3] == 'Назва' or item[1] == 'Артикул':
-                            continue
-                        else:
-                            clear_data = {
-                                'title': item[3],
-                                'price': price_clean,
-                                'article': item[1]
-                            }
-                            items.append(clear_data)
-                    else:
+        items = []
+        try:
+            for item in list_of_items:
+                if len(item[1]) > 0:
+                    price_raw = item[8]
+                    price_clean = (re.sub(r'\xa0', '', price_raw).strip().
+                                   replace(',00', '').replace(' ', ''))
+                    if item[3] == '' or item[3] == 'Назва' or item[1] == 'Артикул':
                         continue
-                return items
-            except Exception as error:
-                raise error
+                    else:
+                        clear_data = {
+                            'title': item[3],
+                            'price': price_clean,
+                            'article': item[1]
+                        }
+                        items.append(clear_data)
+                else:
+                    continue
+            return items
+        except Exception as error:
+            raise error

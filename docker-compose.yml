@@ -8,7 +8,7 @@ services:
     restart: always
     container_name: django-container
     env_file:
-      - .env
+      - .env.local
     volumes:
       - .:/app
     ports:
@@ -35,7 +35,7 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env.local
     ports:
       - "5432:5432"
     networks:
@@ -55,7 +55,7 @@ services:
     restart: always
     command: celery -A scraper.celery_config worker --loglevel=info
     env_file:
-      - .env
+      - .env.local
     depends_on:
       - redis
       - db
@@ -73,7 +73,7 @@ services:
     restart: always
     command: celery -A scraper.celery_config beat --loglevel=info
     env_file:
-      - .env
+      - .env.local
     depends_on:
       - redis
       - db

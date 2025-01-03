@@ -11,28 +11,31 @@
         </div>
     {% else %}
         <div>
-            <strong>Сайт:</strong> <a href="{{ partner.web_site }}" target="_blank">{{ partner.web_site }}</a>
+            <strong>Сайт:</strong> <a href="{{ partner.website }}" target="_blank">{{ partner.website }}</a>
         </div>
         <div>
             <p><strong>Останнє оновлення :</strong> {{ last_updated|date:"Y-m-d H:i" }}</p>
         </div>
 
-        <h2>Перевірка цін <img src="{{ partner.logo.url }}" alt="Logo of {{ partner.name }}" class="partner-logo-right" width="100"></h2>
+        <h2>Перевірка цін
+            {% if partner.logo and partner.logo.url %}
+                <img src="{{ partner.logo.url }}" alt="Logo of {{ partner.name }}" class="partner-logo-right" width="100">
+            {% endif %}
+        </h2>
 
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Назва</th>
+                    <th>Артикул</th>
                     <th>Ціна на сайті</th>
                     <th>РРЦ</th>
-                    <th>Артикул</th>
                     <th>Статус</th>
                 </tr>
             </thead>
             <tbody>
                 {% for entry in comparison_data %}
                     <tr>
-                        <td>{{ entry.scraped_item.name }}</td>
+                        <td>{{ entry.scraped_item.article }}</td>
                         <td>
                             {% if entry.matching_item %}
                                 {% if entry.scraped_item.price == entry.matching_item.rrp_price %}
@@ -53,7 +56,6 @@
                                 N/A
                             {% endif %}
                         </td>
-                        <td>{{ entry.scraped_item.article }}</td>
                         <td>{{ entry.scraped_item.status }}</td>
                     </tr>
                 {% endfor %}

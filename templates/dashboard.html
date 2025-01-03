@@ -2,43 +2,39 @@
 
 {% load custom_filters %}
 
-{% block title %}Дашборд партнеров{% endblock %}
+{% block title %}Дашборд партнерів{% endblock %}
 
 {% block content %}
-    {% if not user.is_staff %}
-        <div class="alert alert-danger" role="alert">
-            Доступ до цієї сторінки закритий. Ви повинні бути частиною команди Новелла для перегляду цієї інформації.
-        </div>
-    {% else %}
-        <h2>Порівняльна таблиця</h2>
+    <h2>Порівняльна таблиця</h2>
 
-        <table class="table table-bordered table-striped">
-            <thead>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Назва товару</th>
+                {% for partner in partners %}
+                    <th>{{ partner.name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
                 <tr>
-                    <th>Назва товару</th>
+                    <td>{{ item.title }}</td>
                     {% for partner in partners %}
-                        <th>{{ partner.name|default:"Невідомий партнер" }}</th>
+                        <td>
+                            {% with comparison_data|get_item:item.article as item_prices %}
+                                {% with item_prices|get_item:partner.id as price %}
+                                    {% if price %}
+                                        {{ price }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                {% endwith %}
+                            {% endwith %}
+                        </td>
                     {% endfor %}
                 </tr>
-            </thead>
-            <tbody>
-                {% for item in items_from_db %}
-                    <tr>
-                        <td>
-                            {{ item.title|default:"Без назви" }}
-                            ({{ item.article|default:"-" }})
-                            РРЦ: {{ item.rrp_price|default:"-" }}
-                        </td>
-                        {% for partner in partners %}
-                            <td>
-                                {% with price=comparison_data|get_item:item.article|get_item:partner.name %}
-                                    {{ price|default:"-" }}
-                                {% endwith %}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
