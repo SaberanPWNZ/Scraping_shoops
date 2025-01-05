@@ -11,6 +11,7 @@ services:
       - .env.local
     volumes:
       - .:/app
+      - ./media:/app/media
     ports:
       - "8000:8000"
     networks:
@@ -24,6 +25,8 @@ services:
     image: redis:6.2-alpine
     container_name: redis_container
     restart: always
+    volumes:
+      - redis_data:/data
     ports:
       - "6379:6379"
     networks:
@@ -33,7 +36,7 @@ services:
     container_name: db
     image: postgres:17.0-alpine
     volumes:
-      - data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env.local
     ports:
@@ -84,7 +87,9 @@ services:
       - scraping_network
 
 volumes:
-  data:
+  postgres_data:
+  redis_data:
+  media_data:
 
 networks:
   scraping_network:
