@@ -93,23 +93,17 @@ def profile_edit_view(request):
 
 
 def partner_detail(request, slug):
-    # Получаем партнера по slug
     partner = get_object_or_404(Partner, slug=slug)
 
-    # Получаем все товары партнера
     partner_items = PartnerItem.objects.filter(partner=partner)
 
     last_prices = {}
 
-    # Проходим по всем товарам партнера
-    for partner_item in partner_items:
-        # Артикул товара партнера
-        scraped_item_article = partner_item.article
 
-        # Ищем соответствующий товар в модели Item
+    for partner_item in partner_items:
+        scraped_item_article = partner_item.article
         matching_item = Item.objects.filter(article=scraped_item_article).first()
 
-        # Если это первый раз или цена обновилась, обновляем last_prices
         if scraped_item_article not in last_prices or last_prices[scraped_item_article]['date'] < partner_item.last_updated:
             last_prices[scraped_item_article] = {
                 'scraped_item': partner_item,
@@ -118,13 +112,10 @@ def partner_detail(request, slug):
                 'matching_item': matching_item,
             }
 
-    # Преобразуем last_prices в список
     comparison_data = list(last_prices.values())
 
-    # Получаем дату последнего обновления среди товаров партнера
     last_updated = partner_items.aggregate(max_date=Max('last_updated'))['max_date']
 
-    # Отправляем данные в шаблон
     return render(request, 'partner_detail.html', {
         'partner': partner,
         'comparison_data': comparison_data,

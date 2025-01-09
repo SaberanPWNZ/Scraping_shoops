@@ -16,6 +16,8 @@ app.autodiscover_tasks(['stores.KTC', 'stores.Auchan', 'stores.Brain', 'stores.C
 #celery -A myapp.celeryapp worker --loglevel=info -P eventlet
 
 cron_time_default = '5'
+cron_time_delicate = '15'
+
 
 app.conf.beat_schedule = {
     'start_ktc_wacom_every_hour': {
@@ -128,40 +130,40 @@ app.conf.beat_schedule = {
 
     'start_wo_wacom': {
         'task': 'stores.WO.tasks.start_wo_wacom',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     },
     'start_wo_xp_pen': {
         'task': 'stores.WO.tasks.start_wo_xp_pen',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     },
 
 
     'start_fotos_wacom': {
         'task': 'stores.F.tasks.start_fotos',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     },
     'start_fotos_xp_pen': {
         'task': 'stores.F.tasks.start_fotos_xp_pen',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     },
 
     'start_rozetka_wacom': {
         'task': 'stores.Rozetka.tasks.start_rozetka_wacom',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     },
     'start_rozetka_xp_pen': {
         'task': 'stores.Rozetka.tasks.start_rozetka_xp_pen',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     },
 
 
     'start_mta_wacom': {
         'task': 'stores.MTA.tasks.start_mta_wacom',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     },
     'start_mta_xp_pen': {
         'task': 'stores.MTA.tasks.start_mta_xp_pen',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     },
 
 
