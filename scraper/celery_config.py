@@ -146,15 +146,15 @@ app.conf.beat_schedule = {
         'task': 'stores.F.tasks.start_fotos_xp_pen',
         'schedule': crontab(minute=cron_time_delicate),
     },
-
-    'start_rozetka_wacom': {
-        'task': 'stores.Rozetka.tasks.start_rozetka_wacom',
-        'schedule': crontab(minute=cron_time_delicate),
-    },
-    'start_rozetka_xp_pen': {
-        'task': 'stores.Rozetka.tasks.start_rozetka_xp_pen',
-        'schedule': crontab(minute=cron_time_delicate),
-    },
+    #
+    # 'start_rozetka_wacom': {
+    #     'task': 'stores.Rozetka.tasks.start_rozetka_wacom',
+    #     'schedule': crontab(minute=cron_time_delicate),
+    # },
+    # 'start_rozetka_xp_pen': {
+    #     'task': 'stores.Rozetka.tasks.start_rozetka_xp_pen',
+    #     'schedule': crontab(minute=cron_time_delicate),
+    # },
 
 
     'start_mta_wacom': {

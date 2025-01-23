@@ -1,4 +1,3 @@
-
 services:
   django:
     build:
@@ -59,6 +58,22 @@ services:
     depends_on:
       - redis
       - django
+    volumes:
+      - .:/app
+    networks:
+      - scraping_network
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bot_container
+    restart: always
+    command: python telegram_bot/bot.py
+    env_file:
+      - .env
+    depends_on:
+      - redis
     volumes:
       - .:/app
     networks:

@@ -45,8 +45,8 @@ class Item(models.Model):
         #validators=[ImageValidator(max_size=5242880, max_width=1200, max_height=800)],
         blank=True,
         null=True)
-    partner_price = models.DecimalField(max_digits=10, decimal_places=2)
-    rrp_price = models.DecimalField(max_digits=10, decimal_places=2)
+    partner_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.0)
+    rrp_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.0)
     warranty = models.ForeignKey(Warranty, on_delete=models.CASCADE)
     ean = models.CharField(max_length=50, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)

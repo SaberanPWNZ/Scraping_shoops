@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import gspread
 
 from databases.google_table_ranges import WACOM_RANGES, XP_PEN_RANGES, wacom_table_url, xp_pen_table_url
+from utillities import _clean_price, check_length
 
 load_dotenv()
 
@@ -33,9 +34,8 @@ class GoogleSheet:
         return records
 
     def generate_info_from_google_sheet(self, google_sheet_url, ranges):
-        global cleaned_data_list
+        cleaned_data_list = []
         try:
-            cleaned_data_list = []
             test_sheet = self.path_to_keys.open_by_url(url=google_sheet_url)
             row_data_article = test_sheet.sheet1.batch_get([rng[0] for rng in ranges])
             row_data_title = test_sheet.sheet1.batch_get([rng[1] for rng in ranges])
@@ -57,61 +57,25 @@ class GoogleSheet:
         finally:
             return cleaned_data_list
 
-    def clear_info_from_sheets_lists(self, list_of_items: list):
-        items = []
-        try:
-            for item in list_of_items:
-                if len(item[1]) > 0:
-                    price_raw = item[4]
-                    price_clean = (re.sub(r'\xa0', '', price_raw).strip().
-                                   replace(',00', '').replace(' ', ''))
-
-                    clear_data = {
-                        'title': item[1],
-                        'price': price_clean,
-                        'article': item[0]
-                    }
-                    items.append(clear_data)
-                else:
-                    continue
-            return items
-        except Exception as error:
-            raise error
 
     def clear_info_from_sheets(self, list_of_items: list):
         items = []
-        for item in list_of_items:
-            price_raw = item['price'][0]
-            price_clean = (re.sub(r'\xa0', '', price_raw).strip().
-                           replace(',00', '').replace(' ', ''))
-
-            clear_data = {
-                'title': item['title'][0],
-                'price': price_clean,
-                'article': item['article'][0]
-            }
-            items.append(clear_data)
-        return items
-
-    def clear_info_from_sheets_lists_for_xppen(self, list_of_items: list):
-        items = []
         try:
             for item in list_of_items:
-                if len(item[1]) > 0:
-                    price_raw = item[8]
-                    price_clean = (re.sub(r'\xa0', '', price_raw).strip().
-                                   replace(',00', '').replace(' ', ''))
-                    if item[3] == '' or item[3] == 'Назва' or item[1] == 'Артикул':
-                        continue
-                    else:
+                if len(item) == 7:
+                    if check_length(item):
                         clear_data = {
-                            'title': item[3],
-                            'price': price_clean,
-                            'article': item[1]
+                            'article': item[0],
+                            'title': item[1],
+                            'status': item[2],
+                            'partner_price': _clean_price(item[3]) if 'підзапит' not in item[3] else 0.0,
+                            'rrp_price': _clean_price(item[4]) if 'підзапит' not in item[4] else 0.0,
+                            'warranty': item[5],
+                            'ean': item[6],
                         }
                         items.append(clear_data)
-                else:
-                    continue
-            return items
         except Exception as error:
             raise error
+        return items
+
+

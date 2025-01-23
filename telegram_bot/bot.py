@@ -1,30 +1,57 @@
-
 import asyncio
 import logging
 import os
 
 from aiogram import Bot, Dispatcher
+from django.core.management import BaseCommand
 
 from dotenv import load_dotenv
 
-from telegram_bot.comands_handlers import command_router
-from telegram_bot.handlers import user_router
-from telegram_bot.midlleware import AdminOnlyMiddleware
-
 load_dotenv()
 
-token = os.getenv(key='BOT_TOKEN_TEST')
+token = os.getenv('BOT_TOKEN')
 bot = Bot(token=token)
 dp = Dispatcher(bot=bot)
-dp.include_router(user_router)
-dp.include_router(command_router)
+
 
 #  204071671
-dp.update.middleware(AdminOnlyMiddleware(admin_ids=[204071671]))
-logging.basicConfig(level=logging.INFO)
+
+class MessageSender:
+    bot_token = token
+    bot = Bot(token=bot_token)
+    recipient_id = '2325008174'
+
+    def get_token(self):
+        return self.bot_token
+
+    def get_recipient_id(self):
+        return self.recipient_id
+
+    @classmethod
+    async def send_telegram_message(cls, message):
+        try:
+            await cls.bot.send_message(chat_id='2325008174', text=message)
+            logging.info(f"Сообщение отправлено: {message}")
+        except Exception as e:
+            logging.error(f"Ошибка при отправке сообщения в Telegram: {e}")
+#
+
+TOKEN = os.getenv("BOT_TOKEN_TEST")
 
 
-async def main():
-    await dp.start_polling(bot, skip_updates=True)
+
+# Создание объекта бота и диспетчера
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
 
 
+async def start_bot():
+    logging.info("Бот запущен")
+    try:
+        await dp.start_polling(bot)
+    except Exception as e:
+        logging.error(f"Ошибка при запуске бота: {e}")
+
+
+if __name__ == "__main__":
+    asyncio.run(start_bot())
