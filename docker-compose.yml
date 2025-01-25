@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   django:
     build:
@@ -28,6 +30,11 @@ services:
       - "6379:6379"
     networks:
       - scraping_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   celery:
     build:
@@ -39,8 +46,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
-      - django
+      redis:
+        condition: service_healthy
+      django:
+        condition: service_started
     volumes:
       - .:/app
     networks:
@@ -56,8 +65,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
-      - django
+      redis:
+        condition: service_healthy
+      django:
+        condition: service_started
     volumes:
       - .:/app
     networks:
@@ -73,7 +84,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     volumes:
       - .:/app
     networks:

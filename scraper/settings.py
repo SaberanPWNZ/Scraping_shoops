@@ -144,3 +144,11 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 LOGIN_URL = '/login/'
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_FILE_PATH = "/tmp/app-messages"
+EMAIL_HOST = os.getenv('SMTP_SERVER')
+EMAIL_PORT = os.getenv('SMTP_PORT')
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('SMTP_USERNAME')  # Ваша почта
+EMAIL_HOST_PASSWORD = os.getenv('SMTP_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('SMTP_USERNAME')

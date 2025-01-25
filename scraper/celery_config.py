@@ -15,6 +15,8 @@ app.autodiscover_tasks(['stores.KTC', 'stores.Auchan', 'stores.Brain', 'stores.C
 
 #celery -A myapp.celeryapp worker --loglevel=info -P eventlet
 
+
+
 cron_time_default = '5'
 cron_time_delicate = '15'
 

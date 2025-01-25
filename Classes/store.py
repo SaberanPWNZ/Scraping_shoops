@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import django
@@ -9,8 +10,8 @@ from datetime import datetime
 
 from Classes.status import Status
 from checker.models import Partner, PartnerItem, PriceHistory
-from telegram_bot.bot import MessageSender
-from utillities import get_article_from_title, clean_price
+from telegram_bot.bot import send_telegram_message_task
+from utillities import get_article_from_title, clean_price, create_message
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scraper.settings")
 
@@ -177,7 +178,6 @@ class BaseStore:
         return item_list
 
     def save_parsed_data(self, partner_name, items, brand):
-        sender = MessageSender()
         brand_instance = Brand.objects.get_or_create(name=brand)
         if not brand_instance:
             raise ValueError(f"Бренд '{brand}' не знайдено.")
@@ -200,7 +200,6 @@ class BaseStore:
                 continue
 
             availability = raw_status.lower() in ['в наявності', 'доступно', 'есть']
-
             partner_item, created = PartnerItem.objects.get_or_create(
                 partner=partner,
                 article=article,
@@ -215,27 +214,24 @@ class BaseStore:
                 partner_item=partner_item,
                 price=partner_item.price
             )
+            new_price = price
+            time = datetime.utcnow()
+            if partner_item.price < price:
+                old_price = partner_item.price
+                prediction = True
+                message = create_message(partner_name, new_price, partner_item.article, time, prediction)
+                send_telegram_message_task(message)
+            if price < partner_item.price:
+                prediction = False
+                message = create_message(partner_name, new_price, partner_item.article, time, prediction)
+                send_telegram_message_task(message)
 
-            # if not created and partner_item.price != price:
-            #     old_price = partner_item.price
-            #     new_price = price
-            #
-            #     message = (
-            #         f"🔔 Изменение цены!\n"
-            #         f"📦 Товар: {partner_item.article}\n"
-            #         f"🏷️ Бренд: {brand}\n"
-            #         f"🛒 Партнер: {partner_name}\n"
-            #         f"💰 Старая цена: {old_price}\n"
-            #         f"💰 Новая цена: {new_price}\n"
-            #         f"🕒 Время: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-            #     )
-                # sender.send_telegram_message(message)
-                # print(message)
             partner_item.price = price
             partner_item.availability = availability
             partner_item.last_updated = datetime.now()
-
             partner_item.save()
+
+
 
 
 class Scraper:
