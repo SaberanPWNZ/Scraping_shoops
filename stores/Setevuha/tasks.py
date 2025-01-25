@@ -1,1 +1,1 @@
-from scraper.celery_config import appfrom stores.Setevuha.setevuha_model import SetevuhaStore@app.taskdef start_setevuha():    setevuha = SetevuhaStore()    items = setevuha.generate_info()    setevuha.save_parsed_data(partner_name="Setevuha", items=items,  brand="WACOM")
+from scraper.celery_config import appfrom stores.Setevuha.setevuha_model import SetevuhaStore@app.taskdef start_setevuha():    setevuha = SetevuhaStore()    items = setevuha.generate_info()    setevuha.save_parsed_data(partner_name="Setevuha", items=items,  brand="WACOM")

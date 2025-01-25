@@ -31,7 +31,6 @@ class BaseStore:
         self.cookies = cookies
         self.all_items = None
 
-
     def load_items(self, container_locator=None, item_locator=None):
 
         self.soup.get(self.url)
@@ -199,7 +198,9 @@ class BaseStore:
             except ValueError:
                 continue
 
-            availability = raw_status.lower() in ['в наявності', 'доступно', 'есть']
+            availability = False
+            if raw_status is not None:
+                availability = raw_status.lower() in ['в наявності', 'доступно', 'есть']
             partner_item, created = PartnerItem.objects.get_or_create(
                 partner=partner,
                 article=article,
@@ -230,8 +231,6 @@ class BaseStore:
             partner_item.availability = availability
             partner_item.last_updated = datetime.now()
             partner_item.save()
-
-
 
 
 class Scraper:
