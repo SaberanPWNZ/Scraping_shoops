@@ -217,12 +217,12 @@ class BaseStore:
             )
             new_price = price
             time = datetime.utcnow()
-            if partner_item.price < price:
+            if partner_item.price < new_price:
                 old_price = partner_item.price
                 prediction = True
                 message = create_message(partner_name, new_price, partner_item.article, time, prediction)
                 send_telegram_message_task(message)
-            if price < partner_item.price:
+            if new_price < partner_item.price:
                 prediction = False
                 message = create_message(partner_name, new_price, partner_item.article, time, prediction)
                 send_telegram_message_task(message)
