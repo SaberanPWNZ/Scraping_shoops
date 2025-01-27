@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from datetime import datetime
 
+from django.utils import timezone
+
 from Classes.status import Status
 from checker.models import Partner, PartnerItem, PriceHistory
 from telegram_bot.bot import send_telegram_message_task
@@ -217,19 +219,19 @@ class BaseStore:
             )
             new_price = price
             time = datetime.utcnow()
-            if partner_item.price < new_price:
+            if partner_item.price < new_price and availability == True:
                 old_price = partner_item.price
                 prediction = True
                 message = create_message(partner_name, new_price, partner_item.article, time, prediction)
-                send_telegram_message_task(message)
-            if new_price < partner_item.price:
+                send_telegram_message_task.delay(message)
+            if new_price < partner_item.price and availability == True:
                 prediction = False
                 message = create_message(partner_name, new_price, partner_item.article, time, prediction)
-                send_telegram_message_task(message)
+                send_telegram_message_task.delay(message)
 
             partner_item.price = price
             partner_item.availability = availability
-            partner_item.last_updated = datetime.now()
+            partner_item.last_updated = timezone.now()
             partner_item.save()
 
 
