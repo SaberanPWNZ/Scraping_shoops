@@ -33,6 +33,12 @@ class BaseStore:
         self.cookies = cookies
         self.all_items = None
 
+    def __str__(self):
+        return
+
+    def send_allert_notification(self):
+        send_telegram_message_task(message=f'Не вдалось завантажити данні - {self.__class__.__name__}')
+
     def load_items(self, container_locator=None, item_locator=None):
 
         self.soup.get(self.url)
