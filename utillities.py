@@ -19,7 +19,7 @@ from datetime import datetime
 def create_message(partner_name: str, price: float, article: str,
                    time: datetime, price_prediction:bool) -> str:
     formatted_time = time.strftime("%d.%m.%Y %H:%M")
-    price_moving = 'ціна збільшилась' if price_prediction else 'ціна зменшилась'
+    price_moving = '🔼ціна збільшилась' if price_prediction else '🔻ціна зменшилась'
     text = (
         f"<b>{partner_name}</b> - {price_moving}\n"
         f"<code>{article}</code> - "
