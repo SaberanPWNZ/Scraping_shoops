@@ -3,8 +3,7 @@ name: Deploy with Docker Compose
 on:
   push:
     branches:
-      - main  # Срабатывает при пуше в ветку main
-
+      - main
 jobs:
   deploy:
     runs-on: ubuntu-latest
