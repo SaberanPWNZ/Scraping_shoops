@@ -139,11 +139,11 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_delicate),
     },
     'start_itbox_wacom': {
-        'task': 'stores.itbox.tasks.start_itbox_wacom',
+        'task': 'stores.Itbox.tasks.start_itbox_wacom',
         'schedule': crontab(minute=cron_time_default),
     },
     'start_itbox_xp_pen': {
-        'task': 'stores.itbox.tasks.start_itbox_xp_pen',
+        'task': 'stores.Itbox.tasks.start_itbox_xp_pen',
         'schedule': crontab(minute=cron_time_default),
     },
 
