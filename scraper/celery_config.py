@@ -134,10 +134,10 @@ app.conf.beat_schedule = {
         'task': 'stores.WO.tasks.start_wo_wacom',
         'schedule': crontab(minute=cron_time_delicate),
     },
-    'start_wo_xp_pen': {
-        'task': 'stores.WO.tasks.start_wo_xp_pen',
-        'schedule': crontab(minute=cron_time_delicate),
-    },
+    # 'start_wo_xp_pen': {
+    #     'task': 'stores.WO.tasks.start_wo_xp_pen',
+    #     'schedule': crontab(minute=cron_time_delicate),
+    # },
     'start_itbox_wacom': {
         'task': 'stores.Itbox.tasks.start_itbox_wacom',
         'schedule': crontab(minute=cron_time_default),
@@ -175,6 +175,15 @@ app.conf.beat_schedule = {
         'task': 'stores.MTA.tasks.start_mta_xp_pen',
         'schedule': crontab(minute=cron_time_delicate),
     },
+
+    'start_comfy_wacom': {
+        'task': 'stores.Comfy.tasks.start_comfy_wacom',
+        'schedule': crontab(minute=cron_time_default),
+    },
+    'start_comfy_xp_pen': {
+        'task': 'stores.Comfy.tasks.start_comfy_xp_pen',
+        'schedule': crontab(minute=cron_time_default),
+    }
 
 
 
