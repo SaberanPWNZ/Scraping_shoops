@@ -178,11 +178,11 @@ app.conf.beat_schedule = {
 
     'start_comfy_wacom': {
         'task': 'stores.Comfy.tasks.start_comfy_wacom',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     },
     'start_comfy_xp_pen': {
         'task': 'stores.Comfy.tasks.start_comfy_xp_pen',
-        'schedule': crontab(minute=cron_time_default),
+        'schedule': crontab(minute=cron_time_delicate),
     }
 
 
