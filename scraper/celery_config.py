@@ -11,15 +11,13 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(['stores.KTC', 'stores.Auchan', 'stores.Brain', 'stores.CAN',
                         'stores.Citrus', 'stores.Click', 'stores.Comtrading', 'stores.Foxtrot',
                         'stores.Moyo', 'stores.Portativ', 'stores.Setevuha', 'stores.WO', 'stores.EXE',
-                        'stores.F', 'stores.Rozetka', 'stores.Comfy', 'stores.MTA', 'stores.Itbox'])
+                        'stores.F', 'stores.Rozetka', 'stores.Comfy', 'stores.MTA', 'stores.Itbox',
+                        'stores.WacomStore'])
 
 #celery -A myapp.celeryapp worker --loglevel=info -P eventlet
 
-
-
 cron_time_default = '5'
 cron_time_delicate = '15'
-
 
 app.conf.beat_schedule = {
     'start_ktc_wacom_every_hour': {
@@ -31,12 +29,10 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_default),
     },
 
-
     'start_auchan_wacom': {
         'task': 'stores.Auchan.tasks.start_auchan_wacom',
         'schedule': crontab(minute=cron_time_default),
     },
-
 
     'start_brain_wacom': {
         'task': 'stores.Brain.tasks.start_brain_wacom',
@@ -47,7 +43,6 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_default),
     },
 
-
     'start_can_wacom': {
         'task': 'stores.CAN.tasks.start_can_wacom',
         'schedule': crontab(minute=cron_time_default),
@@ -56,7 +51,6 @@ app.conf.beat_schedule = {
         'task': 'stores.CAN.tasks.start_can_xp_pen',
         'schedule': crontab(minute=cron_time_default),
     },
-
 
     'start_citrus_wacom': {
         'task': 'stores.Citrus.tasks.start_citrus_wacom',
@@ -67,7 +61,6 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_default),
     },
 
-
     'start_click_wacom': {
         'task': 'stores.Click.tasks.start_click_wacom',
         'schedule': crontab(minute=cron_time_default),
@@ -76,7 +69,6 @@ app.conf.beat_schedule = {
         'task': 'stores.Click.tasks.start_click_xp_pen',
         'schedule': crontab(minute=cron_time_default),
     },
-
 
     'start_comtrading_wacom': {
         'task': 'stores.Comtrading.tasks.start_comtrading_wacom',
@@ -87,16 +79,14 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_default),
     },
 
-
-    'start_exe_wacom': {
-        'task': 'stores.EXE.tasks.start_exe_wacom',
-        'schedule': crontab(minute=cron_time_default),
-    },
-    'start_exe_xp_pen': {
-        'task': 'stores.EXE.tasks.start_exe_xp_pen',
-        'schedule': crontab(minute=cron_time_default),
-    },
-
+    # 'start_exe_wacom': {
+    #     'task': 'stores.EXE.tasks.start_exe_wacom',
+    #     'schedule': crontab(minute=cron_time_default),
+    # },
+    # 'start_exe_xp_pen': {
+    #     'task': 'stores.EXE.tasks.start_exe_xp_pen',
+    #     'schedule': crontab(minute=cron_time_default),
+    # },
 
     'start_foxtrot_wacom': {
         'task': 'stores.Foxtrot.tasks.start_foxtrot_wacom',
@@ -107,13 +97,15 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_default),
     },
 
-
+    'start_wacomstore_wacom': {
+        'task': 'stores.WacomStore.tasks.start_wacom_store_wacom',
+        'schedule': crontab(minute=cron_time_default),
+    },
 
     'start_moyo_wacom': {
         'task': 'stores.Moyo.tasks.start_moyo',
         'schedule': crontab(minute=cron_time_default),
     },
-
 
     'start_portativ_wacom': {
         'task': 'stores.Portativ.tasks.start_portativ_wacom',
@@ -123,7 +115,6 @@ app.conf.beat_schedule = {
         'task': 'stores.Portativ.tasks.start_portativ_xp_pen',
         'schedule': crontab(minute=cron_time_default),
     },
-
 
     'start_setevuha_wacom': {
         'task': 'stores.Setevuha.tasks.start_setevuha',
@@ -147,7 +138,6 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_default),
     },
 
-
     'start_fotos_wacom': {
         'task': 'stores.F.tasks.start_fotos',
         'schedule': crontab(minute=cron_time_delicate),
@@ -166,7 +156,6 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_delicate),
     },
 
-
     'start_mta_wacom': {
         'task': 'stores.MTA.tasks.start_mta_wacom',
         'schedule': crontab(minute=cron_time_delicate),
@@ -184,7 +173,5 @@ app.conf.beat_schedule = {
         'task': 'stores.Comfy.tasks.start_comfy_xp_pen',
         'schedule': crontab(minute=cron_time_delicate),
     }
-
-
 
 }
