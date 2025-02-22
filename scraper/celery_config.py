@@ -14,7 +14,7 @@ app.autodiscover_tasks(['stores.KTC', 'stores.Auchan', 'stores.Brain', 'stores.C
                         'stores.Citrus', 'stores.Click', 'stores.Comtrading', 'stores.Foxtrot',
                         'stores.Moyo', 'stores.Portativ', 'stores.Setevuha', 'stores.WO', 'stores.EXE',
                         'stores.F', 'stores.Rozetka', 'stores.Comfy', 'stores.MTA', 'stores.Itbox',
-                        'stores.WacomStore', 'databases.db_helper'])
+                        'stores.WacomStore', 'databases.database'])
 
 #celery -A myapp.celeryapp worker --loglevel=info -P eventlet
 
@@ -23,7 +23,7 @@ cron_time_delicate = '15'
 
 app.conf.beat_schedule = {
     'shedule_updating_db_wacom': {
-        'task': 'databases.db_helper.shedule_updating_db_wacom',
+        'task': 'databases.database.shedule_updating_db_wacom',
         'schedule': crontab(minute=cron_time_delicate)
     },
     'start_ktc_wacom_every_hour': {
