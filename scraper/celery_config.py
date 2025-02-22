@@ -3,6 +3,8 @@ import os
 from celery import Celery
 from celery.schedules import crontab
 
+import databases.db_helper
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'scraper.settings')
 
 app = Celery('scraper', broker=os.getenv('CELERY_BROKER_URL'))
@@ -12,7 +14,7 @@ app.autodiscover_tasks(['stores.KTC', 'stores.Auchan', 'stores.Brain', 'stores.C
                         'stores.Citrus', 'stores.Click', 'stores.Comtrading', 'stores.Foxtrot',
                         'stores.Moyo', 'stores.Portativ', 'stores.Setevuha', 'stores.WO', 'stores.EXE',
                         'stores.F', 'stores.Rozetka', 'stores.Comfy', 'stores.MTA', 'stores.Itbox',
-                        'stores.WacomStore'])
+                        'stores.WacomStore', 'databases.db_helper'])
 
 #celery -A myapp.celeryapp worker --loglevel=info -P eventlet
 
@@ -20,6 +22,10 @@ cron_time_default = '5'
 cron_time_delicate = '15'
 
 app.conf.beat_schedule = {
+    'shedule_updating_db_wacom': {
+        'task': 'databases.db_helper.shedule_updating_db_wacom',
+        'schedule': crontab(minute=cron_time_delicate)
+    },
     'start_ktc_wacom_every_hour': {
         'task': 'stores.KTC.tasks.start_ktc_wacom',
         'schedule': crontab(minute=cron_time_default),
