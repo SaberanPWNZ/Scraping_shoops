@@ -34,7 +34,12 @@ class BaseStore:
         self.all_items = None
 
     def __str__(self):
-        return
+        return self.__class__.__name__
+
+    def get_soup(self, link):
+        response = requests.get(link, headers=self.headers)
+        response.raise_for_status()
+        return BeautifulSoup(response.text, 'lxml')
 
     def send_allert_notification(self):
         send_telegram_message_task(message=f'Не вдалось завантажити данні - {self.__class__.__name__}')
@@ -85,73 +90,8 @@ class BaseStore:
 
         return item_list
 
-    def compare_data(self, partner_items_list: List[dict]):
-
-        missing_items = []
-        for elem in partner_items_list:
-            try:
-                article = elem.get('article', '').upper()
-                if not article:
-                    raise ValueError(f'Article is missing or empty in element: {elem}')
-
-                price_partner = elem['price']
-
-                item = Item.objects.filter(article=article).first()
-
-                if item:
-                    item_price = int(item.rrp_price)
-                    if int(price_partner) == item_price:
-                        missing_items.append(f'✅ {article} - Ціна партнера: {price_partner} грн, РРЦ: {item_price} грн')
-                    elif int(price_partner) < item_price:
-                        missing_items.append(
-                            f'🛑 {article} - Ціна нижча за РРЦ: {price_partner} грн, РРЦ: {item_price} грн')
-                    else:
-                        missing_items.append(
-                            f'⚠️ {article} - Ціна вища за РРЦ: {price_partner} грн, РРЦ: {item_price} грн')
-                else:
-                    missing_items.append(f'🔍 {article} не знайдено в базі данних')
-
-            except KeyError as e:
-                missing_items.append(f'❌ Помилка: Невірний формат данних {elem}, {e}')
-
-            except ValueError as e:
-                missing_items.append(f'❌ Помилка: {e}')
-
-            # except Exception as e:
-            #     missing_items.append(f'❌ Помилка: розпізнавання данних {}')
-
-        sorted_items = sorted(missing_items, key=lambda x: (not x.startswith('🛑'), x))
-        return sorted_items
-
-    def compare_data_xp_pen(self, partner_items_list, article_dict, model, price_field='rrp_price'):
-
-        missing_items = []
-
-        for elem in partner_items_list:
-            name = elem['name']
-            price_partner = int(elem['price']) if elem['price'] is not None else None
-            article = article_dict.get(name)
-
-            item = model.objects.filter(article=article).first()
-
-            if item:
-                item_price = int(getattr(item, price_field))
-                if price_partner == item_price:
-                    missing_items.append(f'✅ {article} - Ціна партнера: {price_partner} грн, РРЦ: {item_price} грн')
-                elif price_partner < item_price:
-                    missing_items.append(
-                        f'🛑 {article} - Ціна нижча за РРЦ: {price_partner} грн, РРЦ: {item_price} грн')
-                elif price_partner > item_price:
-                    missing_items.append(
-                        f'⚠️ {article} - Ціна вища за РРЦ: {price_partner} грн, РРЦ: {item_price} грн')
-            else:
-                missing_items.append(f'🔍 {name} не знайдено в базі данних')
-
-        sorted_items = sorted(missing_items, key=lambda x: (not x.startswith('✅'), x))
-        return sorted_items
-
-    def generate_info_with_articles(self, title_locator=None, price_locator=None, status_locator=None,
-                                    article_extractor=None):
+    def _generate_info_with_articles(self, title_locator=None, price_locator=None, status_locator=None,
+                                     article_extractor=None):
         if self.all_items is None:
             raise ValueError("Данные не загружены. Вызовите `load_items` перед генерацией информации.")
 
@@ -183,6 +123,36 @@ class BaseStore:
             item_list.append(card_item)
 
         return item_list
+
+    def generate_info_with_many_links(self, links: list, products_link_locator: str, name_elem_locator: str,
+                                      price_elem_locator: str, article_elem_locator: str):
+        for link in links:
+            soup = self.get_soup(link)
+            product_items = soup.find_all(
+                class_=products_link_locator
+            )
+
+            for item in product_items:
+                try:
+                    name_elem = item.find(class_=name_elem_locator)
+                    price_elem = item.find(class_=price_elem_locator)
+                    article_elem = item.find(class_=article_elem_locator)
+
+                    price = price_elem.text.strip().split('₴')[0].strip().replace(' ', '') if price_elem else "0"
+                    article = article_elem.text.strip() if article_elem else "None"
+
+                    card_item = {
+                        "name": name_elem.text.strip() if name_elem else "N/A",
+                        "price": price.split(',')[0],
+                        "article": article,
+                        "status": Status.in_stock
+                    }
+                    self.items.append(card_item)
+
+                except Exception as ex:
+                    print(f"Ошибка при обработке {link}: {ex}")
+
+        return self.items
 
     def save_parsed_data(self, partner_name, items, brand):
         brand_instance = Brand.objects.get_or_create(name=brand)
