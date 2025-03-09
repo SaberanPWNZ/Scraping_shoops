@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from dotenv import load_dotenv
@@ -7,7 +8,7 @@ from databases.google_table_ranges import WACOM_RANGES, XP_PEN_RANGES, wacom_tab
 from utillities import _clean_price, check_length
 
 load_dotenv()
-
+logger = logging.getLogger(__name__)
 
 def clear_data(items_list):
     return [item for sublist in items_list for item in sublist]
@@ -20,6 +21,26 @@ class GoogleSheet:
     path_to_keys = gspread.api_key(token=google_token)
     xp_pen_table_url = xp_pen_table_url
     wacom_table_url = wacom_table_url
+    xp_pen_length_of_item_from_table = 8
+    wacom_length_of_item_from_table = 7
+    xp_pen_elem_position = {
+        'article': 1,
+        'title': 2,
+        'status': 3,
+        'partner_price': 4,
+        'rrp_price': 5,
+        'warranty': 6,
+        'ean': 7
+    }
+    wacom_elem_position = {
+        'article': 0,
+        'title': 1,
+        'status': 2,
+        'partner_price': 3,
+        'rrp_price': 4,
+        'warranty': 5,
+        'ean': 6
+    }
 
     def generate_info_from_google_sheet_list(self, google_sheet_url, sheet_name):
         try:
@@ -57,25 +78,33 @@ class GoogleSheet:
         finally:
             return cleaned_data_list
 
-
-    def clear_info_from_sheets(self, list_of_items: list):
+    def clear_info_from_sheets(self, list_of_items: list, elem_positions: dict, len_items: int):
         items = []
         try:
+            logger.info(f'Начинаем обработку {len(list_of_items)} элементов')
             for item in list_of_items:
-                if len(item) == 7:
+                logger.info(f'Обрабатываем: {item}')
+                if len(item) == len_items:
                     if check_length(item):
-                        clear_data = {
-                            'article': item[0],
-                            'title': item[1],
-                            'status': item[2],
-                            'partner_price': _clean_price(item[3]) if 'підзапит' not in item[3] else 0.0,
-                            'rrp_price': _clean_price(item[4]) if 'підзапит' not in item[4] else 0.0,
-                            'warranty': item[5],
-                            'ean': item[6],
-                        }
-                        items.append(clear_data)
+                        try:
+                            partner_price_raw = item[elem_positions['partner_price']]
+                            rrp_price_raw = item[elem_positions['rrp_price']]
+
+                            clear_data = {
+                                'article': item[elem_positions['article']],
+                                'title': item[elem_positions['title']],
+                                'status': item[elem_positions['status']],
+                                'partner_price': _clean_price(
+                                    partner_price_raw) if 'підзапит' not in partner_price_raw else 0.0,
+                                'rrp_price': _clean_price(rrp_price_raw) if 'підзапит' not in rrp_price_raw else 0.0,
+                                'warranty': item[5],
+                                'ean': item[6],
+                            }
+                            items.append(clear_data)
+                        except Exception as e:
+                            logger.error(f'Ошибка обработки элемента {item}: {e}', exc_info=True)
         except Exception as error:
+            logger.error(f'Ошибка в clear_info_from_sheets: {error}', exc_info=True)
             raise error
+        logger.info(f'Обработано {len(items)} элементов')
         return items
-
-

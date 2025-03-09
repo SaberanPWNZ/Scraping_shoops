@@ -7,7 +7,6 @@ class PartnerScrapingInfoSerializer(serializers.Serializer):
     pass
 
 
-
 class PartnerItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PartnerItem

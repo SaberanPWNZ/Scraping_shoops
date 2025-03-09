@@ -26,6 +26,11 @@ app.conf.beat_schedule = {
         'task': 'databases.database.shedule_updating_db_wacom',
         'schedule': crontab(minute=cron_time_delicate)
     },
+    'shedule_updating_db_xp_pen': {
+        'task': 'databases.database.shedule_updating_db_xp_pen',
+        'schedule': crontab(minute=cron_time_delicate)
+    }
+    ,
     'start_ktc_wacom_every_hour': {
         'task': 'stores.KTC.tasks.start_ktc_wacom',
         'schedule': crontab(minute=cron_time_default),
