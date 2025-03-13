@@ -5,6 +5,8 @@ from databases.parse_db import GoogleSheet
 from scraper.celery_config import app
 
 logger = logging.getLogger(__name__)
+
+
 @app.task()
 def shedule_updating_db_wacom():
     try:
@@ -20,7 +22,6 @@ def shedule_updating_db_wacom():
         logger.error(F'не вдалось оновити БД - {ex}')
 
 
-
 @app.task()
 def shedule_updating_db_xp_pen():
     try:
@@ -34,5 +35,3 @@ def shedule_updating_db_xp_pen():
         update_database(cleared_data)
     except Exception as ex:
         logger.error(F'не вдалось оновити БД - {ex}')
-
-

@@ -10,6 +10,7 @@ from utillities import _clean_price, check_length
 load_dotenv()
 logger = logging.getLogger(__name__)
 
+
 def clear_data(items_list):
     return [item for sublist in items_list for item in sublist]
 

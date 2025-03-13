@@ -50,5 +50,5 @@ class PriceHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "История цен"
-        verbose_name_plural = "Истории цен"
+        verbose_name = "Історія цін"
+        verbose_name_plural = "Історії цін"
