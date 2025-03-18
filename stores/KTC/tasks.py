@@ -1,10 +1,6 @@
-import logging
-import os
 
-import bs4
 import django
-import requests
-
+import os
 os.environ["DJANGO_SETTINGS_MODULE"] = "scraper.settings"
 django.setup()
 
@@ -13,7 +9,9 @@ from stores.KTC.ktc_info import KTC_ARTICLES
 from stores.KTC.ktc_model import KtcStore
 from stores.KTC.locators import KtcLocator
 from utillities import custom_article_extractor
-from items.models import Item
+
+import logging
+
 
 logger = logging.getLogger('scraping')
 
@@ -21,8 +19,8 @@ logger = logging.getLogger('scraping')
 def start_ktc_wacom():
     try:
         ktc = KtcStore(url=KtcLocator.WACOM_PAGE_URL)
-        ktc.load_items(container_locator=KtcLocator.CATALOG_GOODS, item_locator=KtcLocator.ITEM_LOOP)
-        items = ktc.generate_info_with_articles(
+        ktc.load_items(container_locator=KtcLocator.CATALOG_GOODS, item_locator=KtcLocator.ITEM_LOOP, pages=2)
+        items = ktc._generate_info_with_articles(
             title_locator=KtcLocator.ITEM_TITLE,
             price_extractor=lambda elem: ktc.extract_price(elem, locator=KtcLocator.ITEM_PRICE,
                                                            tag=KtcLocator.CONTAINER_LOCATOR_TAG),
@@ -34,7 +32,7 @@ def start_ktc_wacom():
             ktc.send_allert_notification()
 
         ktc.save_parsed_data(partner_name="KTC", items=items, brand='WACOM')
-        logger.info(f"Збережено/Оновлено {len(items)} товарів для партнера KTC (бренд XP-Pen).")
+        logger.info(f"Збережено/Оновлено {len(items)} товарів для партнера KTC (бренд WACOM).")
 
     except Exception as e:
         logger.info(f"Помилка парсингу данних KTC/XP-Pen {e}")
@@ -45,8 +43,8 @@ def start_ktc_wacom():
 def start_ktc_xp_pen():
     try:
         ktc = KtcStore(url=KtcLocator.XP_PEN_PAGE_URL)
-        ktc.load_items(container_locator=KtcLocator.CATALOG_GOODS, item_locator=KtcLocator.ITEM_LOOP)
-        items = ktc.generate_info_with_articles(
+        ktc.load_items(container_locator=KtcLocator.CATALOG_GOODS, item_locator=KtcLocator.ITEM_LOOP, pages=2)
+        items = ktc._generate_info_with_articles(
             price_extractor=lambda elem: ktc.extract_price(elem, locator=KtcLocator.ITEM_PRICE,
                                                            tag=KtcLocator.CONTAINER_LOCATOR_TAG),
             title_locator=KtcLocator.ITEM_TITLE,
@@ -63,4 +61,5 @@ def start_ktc_xp_pen():
 
     except Exception as e:
         logger.info(f"Помилка парсингу данних KTC/XP-Pen {e}")
+
 

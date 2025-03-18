@@ -1,5 +1,5 @@
 from Classes.store import BaseStore, Scraper
-from stores.telemart.telemart_info import TelemartLocators
+from stores.Telemart.telemart_info import TelemartLocators
 
 
 class Telemart(BaseStore):

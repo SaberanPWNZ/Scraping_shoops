@@ -14,7 +14,7 @@ app.autodiscover_tasks(['stores.KTC', 'stores.Auchan', 'stores.Brain', 'stores.C
                         'stores.Citrus', 'stores.Click', 'stores.Comtrading', 'stores.Foxtrot',
                         'stores.Moyo', 'stores.Portativ', 'stores.Setevuha', 'stores.WO', 'stores.EXE',
                         'stores.F', 'stores.Rozetka', 'stores.Comfy', 'stores.MTA', 'stores.Itbox',
-                        'stores.WacomStore', 'stores.telemart', 'databases.database'])
+                        'stores.WacomStore', 'stores.Telemart', 'databases.database'])
 
 #celery -A myapp.celeryapp worker --loglevel=info -P eventlet
 
@@ -185,11 +185,11 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_delicate),
     },
     'start_telemart_wacom': {
-        'task': 'stores.telemart.tasks.start_telemart_wacom',
+        'task': 'stores.Telemart.tasks.start_telemart_wacom',
         'schedule': crontab(minute=cron_time_default),
     },
     'start_telemart_xp_pen': {
-        'task': 'stores.telemart.tasks.start_telemart_xp_pen',
+        'task': 'stores.Telemart.tasks.start_telemart_xp_pen',
         'schedule': crontab(minute=cron_time_default),
     }
 

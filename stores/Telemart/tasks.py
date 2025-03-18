@@ -6,8 +6,8 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "scraper.settings"
 django.setup()
 
 from scraper.celery_config import app
-from stores.telemart.telemart_info import TelemartLocators, TELEMART_ARTICLES_XP_PEN, TELEMART_ARTICLES_WACOM
-from stores.telemart.telemart_model import Telemart
+from stores.Telemart.telemart_info import TelemartLocators, TELEMART_ARTICLES_XP_PEN, TELEMART_ARTICLES_WACOM
+from stores.Telemart.telemart_model import Telemart
 from utillities import custom_article_extractor
 
 logger = logging.getLogger('scraping')

@@ -82,9 +82,8 @@ class GoogleSheet:
     def clear_info_from_sheets(self, list_of_items: list, elem_positions: dict, len_items: int):
         items = []
         try:
-            logger.info(f'Начинаем обработку {len(list_of_items)} элементов')
+
             for item in list_of_items:
-                logger.info(f'Обрабатываем: {item}')
                 if len(item) == len_items:
                     if check_length(item):
                         try:
