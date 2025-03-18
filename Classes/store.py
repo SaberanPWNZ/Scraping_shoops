@@ -34,10 +34,8 @@ class BaseStore:
         self.all_items = None
         self.pagination_param = "?page="
 
-    def load_items(self, pages=1, tag=None, container_locator=None, item_locator=None, headers=None):
-      
-    def __str__(self):
-        return self.__class__.__name__
+    #def load_items(self, pages=1, tag=None, container_locator=None, item_locator=None, headers=None):
+
 
     def get_soup(self, link):
         response = requests.get(link, headers=self.headers)
@@ -47,8 +45,7 @@ class BaseStore:
     def send_allert_notification(self):
         send_telegram_message_task(message=f'Не вдалось завантажити данні - {self.__class__.__name__}')
 
-    def load_items(self, container_locator=None, item_locator=None):
-
+    def load_items(self, container_locator=None, item_locator=None, pages=None, tag=None):
 
         self.all_items = []
         if isinstance(pages, int):
@@ -59,7 +56,7 @@ class BaseStore:
             raise ValueError("`pages`must be int (pages count) or list.")
 
         for url in urls:
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=self.headers)
             if response.status_code != 200:
                 print(f"Error with {url}: {response.status_code}")
                 continue
@@ -180,7 +177,7 @@ class BaseStore:
             raise ValueError("Данные не загружены. Передайте список товаров.")
 
     def _generate_info_with_articles(self, title_locator=None, price_locator=None, status_locator=None,
-                                     article_extractor=None):
+                                     article_extractor=None, price_extractor=None, status_extractor=None):
         if self.all_items is None:
             raise ValueError("Данные не загружены. Вызовите `load_items` перед генерацией информации.")
 
