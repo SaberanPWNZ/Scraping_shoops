@@ -1,3 +1,4 @@
+version: '3.8'
 
 services:
   django:
@@ -29,6 +30,11 @@ services:
       - "6379:6379"
     networks:
       - scraping_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   celery:
     build:
@@ -40,8 +46,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
-      - django
+      redis:
+        condition: service_healthy
+      django:
+        condition: service_started
     volumes:
       - .:/app
     networks:
@@ -57,8 +65,27 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
-      - django
+      redis:
+        condition: service_healthy
+      django:
+        condition: service_started
+    volumes:
+      - .:/app
+    networks:
+      - scraping_network
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bot_container
+    restart: always
+    command: python telegram_bot/bot.py
+    env_file:
+      - .env
+    depends_on:
+      redis:
+        condition: service_healthy
     volumes:
       - .:/app
     networks:

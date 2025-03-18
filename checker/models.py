@@ -25,12 +25,12 @@ class Partner(models.Model):
 
 
 class PartnerItem(models.Model):
-    partner = models.ForeignKey(Partner, on_delete=models.CASCADE, related_name="items")
-    article = models.CharField(max_length=40, blank=False)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    partner = models.ForeignKey(Partner, on_delete=models.CASCADE, related_name="partner_items")
+    article = models.CharField(max_length=50, blank=False, db_index=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, db_index=True)
     status = models.CharField(max_length=50, blank=True)
-    availability = models.BooleanField(default=True)
-    last_updated = models.DateTimeField(auto_now=True)
+    availability = models.CharField(max_length=50)
+    last_updated = models.DateTimeField(auto_now=True, db_index=True)
 
     class Meta:
         verbose_name = "Товар партнера"
@@ -38,8 +38,17 @@ class PartnerItem(models.Model):
 
     def __str__(self):
         return f"{self.partner.name} - {self.article}"
-@receiver(pre_save, sender=Partner)
-def set_slug(sender, instance, **kwargs):
-    if not instance.slug:
-        instance.slug = slugify(instance.name)
 
+
+class PriceHistory(models.Model):
+    partner_item = models.ForeignKey(
+        PartnerItem,
+        on_delete=models.CASCADE,
+        related_name="price_history"
+    )
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Історія цін"
+        verbose_name_plural = "Історії цін"

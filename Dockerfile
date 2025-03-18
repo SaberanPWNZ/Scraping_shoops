@@ -8,24 +8,18 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
 WORKDIR /app
 
-
 COPY requirements.txt /app/
-t
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-
-RUN playwright install
-
+RUN playwright install chromium
+RUN playwright install-deps
 
 COPY . /app
 
-
 ENV PYTHONPATH="${PYTHONPATH}:/app"
-
 
 EXPOSE 8000
 

@@ -1,11 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db.models import Max
-
+from django.db.models import Max, Q
+from rest_framework import status
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import models
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from checker.models import Partner, PartnerItem
+from checker.serializers import PartnerItemSerializer
 from items.models import Item, Brand
 from users.forms import UserRegistrationForm, UserChangeProfile
 from django import template
@@ -17,6 +21,10 @@ register = template.Library()
 def index(request):
     partners = Partner.objects.all()
     return render(request, 'index.html', {'partners': partners})
+
+
+def scraped_data_view():
+    pass
 
 
 def dashboard_view(request):
@@ -99,12 +107,12 @@ def partner_detail(request, slug):
 
     last_prices = {}
 
-
     for partner_item in partner_items:
         scraped_item_article = partner_item.article
         matching_item = Item.objects.filter(article=scraped_item_article).first()
 
-        if scraped_item_article not in last_prices or last_prices[scraped_item_article]['date'] < partner_item.last_updated:
+        if scraped_item_article not in last_prices or last_prices[scraped_item_article][
+            'date'] < partner_item.last_updated:
             last_prices[scraped_item_article] = {
                 'scraped_item': partner_item,
                 'price': partner_item.price,
@@ -121,3 +129,59 @@ def partner_detail(request, slug):
         'comparison_data': comparison_data,
         'last_updated': last_updated,
     })
+
+
+class PartnersScrapingInfo(APIView):
+    def get(self, request):
+        items = Item.objects.all()
+        comparison_data = []
+
+        for item in items:
+            partner_prices = PartnerItem.objects.filter(article=item.article).values(
+                'partner__name'
+            ).annotate(latest_price=Max('price'))
+
+            prices = {
+                price['partner__name']: price['latest_price']
+                for price in partner_prices
+            }
+
+            comparison_data.append({
+                "article": item.article,
+                "title": item.title,
+                "rrp_price": item.rrp_price,
+                "partners": prices,
+            })
+
+        return Response(comparison_data, status=status.HTTP_200_OK)
+
+
+class PartnerItemSearch(APIView):
+    def get(self, request, query=None):
+        query = query or request.query_params.get("q", "").strip()
+        if not query:
+            return Response({"error": "відсутній пошуковий запит"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            item = Item.objects.get(article=query)
+        except Item.DoesNotExist:
+            return Response({"error": "артикул не знайдено"}, status=status.HTTP_404_NOT_FOUND)
+
+        partner_prices = (
+            PartnerItem.objects.filter(article=item.article)
+            .values("partner__name")
+            .annotate(latest_price=Max("price"))
+        )
+
+        prices = {
+            price["partner__name"]: price["latest_price"]
+            for price in partner_prices
+        }
+
+        response_data = {
+            "article": item.article,
+            "title": item.title,
+            "rrp_price": item.rrp_price,
+            "partners": prices,
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)

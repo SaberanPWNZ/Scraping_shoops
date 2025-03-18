@@ -9,8 +9,6 @@ class AdminPartner(admin.ModelAdmin):
     list_filter = ['name']
 
 
-
-
 class AdminBrand(admin.ModelAdmin):
     list_display = ['name']
 
