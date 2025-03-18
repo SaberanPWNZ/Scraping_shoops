@@ -29,16 +29,31 @@ class BaseStore:
         self.headers = headers
         self.cookies = cookies
         self.all_items = None
+        self.pagination_param = "?page="
 
-    def load_items(self, container_locator=None, item_locator=None):
+    def load_items(self, pages=1, tag=None, container_locator=None, item_locator=None, headers=None):
 
-        self.soup.get(self.url)
-        soup = self.soup.get_text()
+        self.all_items = []
+        if isinstance(pages, int):
+            urls = [f"{self.url}{self.pagination_param}{i}" for i in range(1, pages + 1)]
+        elif isinstance(pages, list):
+            urls = pages
+        else:
+            raise ValueError("`pages`must be int (pages count) or list.")
 
-        self.all_items = self.extract_items_by_locator(soup, container_locator, item_locator)
+        for url in urls:
+            response = requests.get(url, headers=headers)
+            if response.status_code != 200:
+                print(f"Error with {url}: {response.status_code}")
+                continue
 
-    def extract_items_by_locator(self, soup, container_locator, item_locator):
-        container = soup.find(class_=container_locator)
+            soup = BeautifulSoup(response.text, "html.parser")
+            self.all_items.extend(self.extract_items_by_locator(soup, container_locator, item_locator, tag))
+
+        return self.all_items
+
+    def extract_items_by_locator(self, soup, container_locator, item_locator, tag=None, ):
+        container = soup.find(tag, class_=container_locator)
         if container:
             return container.find_all(class_=item_locator)
         else:
@@ -141,37 +156,40 @@ class BaseStore:
         sorted_items = sorted(missing_items, key=lambda x: (not x.startswith('✅'), x))
         return sorted_items
 
-    def generate_info_with_articles(self, title_locator=None, price_locator=None, status_locator=None,
-                                    article_extractor=None):
-        if self.all_items is None:
-            raise ValueError("Данные не загружены. Вызовите `load_items` перед генерацией информации.")
+    def generate_info_with_articles(self, title_locator=None,
+                                    price_locator=None, status_locator=None,
+                                    article_extractor=None, price_extractor=None, status_extractor=None):
+        if not self.all_items:
+            raise ValueError("Данные не загружены. Передайте список товаров.")
 
         item_list = []
         for elem in self.all_items:
-
-            name_element = elem.find(class_=title_locator)
-            name = name_element.get_text().strip() if name_element else None
+            name_element = elem.find(class_=title_locator) if title_locator else None
+            name = name_element.get_text(strip=True) if name_element else None
 
             article = article_extractor(name) if article_extractor and name else None
 
             price = None
-            if price_locator:
-                price_element = elem.find(class_=price_locator)
-                price = clean_price(
-                    price_element.get('data-price', '').strip().replace('.00', '')) if price_element else None
+            if price_extractor:
+                extracted_price = price_extractor(elem)
+                price = clean_price(extracted_price) if extracted_price else None
+            elif price_locator:
+                price_element = elem.select_one(price_locator)
+                price = clean_price(price_element.get_text(strip=True)) if price_element else None
 
             status = None
-            if status_locator:
-                status_element = elem.find(class_=status_locator)
+            if status_extractor:
+                status = status_extractor(elem)
+            elif status_locator:
+                status_element = elem.select_one(status_locator)
                 status = Status.not_in_stock if status_element else Status.in_stock
 
-            card_item = {
+            item_list.append({
                 'name': name,
                 'article': article,
                 'price': price,
                 'status': status,
-            }
-            item_list.append(card_item)
+            })
 
         return item_list
 
@@ -209,6 +227,10 @@ class BaseStore:
                 partner_item.availability = item.get('status', True)
                 partner_item.last_updated = now()
                 partner_item.save()
+
+    def extract_price(self, element, tag, locator):
+        price_element = element.find(name=tag, class_=locator)
+        return price_element.get_text(strip=True) if price_element else None
 
 
 class Scraper:
