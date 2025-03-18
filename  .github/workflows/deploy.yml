@@ -23,7 +23,6 @@ jobs:
         port: 22
         rm: true
         script: |
-          cd ./Scraping_shoops  # Папка с файлом docker-compose.yml
           git pull origin main  # Обновляем репозиторий с кодом
           docker-compose down   # Останавливаем текущие контейнеры
           docker-compose pull   # Загружаем новые образы (если изменились)
