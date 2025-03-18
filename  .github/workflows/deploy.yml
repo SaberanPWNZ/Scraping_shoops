@@ -1,0 +1,28 @@
+name: Deploy with Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        port: 22
+        rm: true
+        script: |
+          cd ./Scraping_shoops  # Папка с файлом docker-compose.yml
+          git pull origin main  # Обновляем репозиторий с кодом
+          docker-compose down   # Останавливаем текущие контейнеры
+          docker-compose pull   # Загружаем новые образы (если изменились)
+          docker-compose up -d 
