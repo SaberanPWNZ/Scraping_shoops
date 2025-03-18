@@ -228,9 +228,15 @@ class BaseStore:
                 partner_item.last_updated = now()
                 partner_item.save()
 
-    def extract_price(self, element, tag, locator):
-        price_element = element.find(name=tag, class_=locator)
-        return price_element.get_text(strip=True) if price_element else None
+    def extract_price(self, element, locator=None, tag=None, attribute=None):
+        if attribute and element.has_attr(attribute):
+            return clean_price(element[attribute])
+        if tag and locator:
+            price_element = element.find(tag, class_=locator)
+            if price_element:
+                return clean_price(price_element.get_text(strip=True))
+
+        return None
 
 
 class Scraper:

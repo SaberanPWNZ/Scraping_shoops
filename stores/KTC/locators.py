@@ -5,6 +5,6 @@ class KtcLocator:
     LOOP_LIST = 'js-looplist looplist looplist-4 clearfix'
     ITEM_LOOP = 'loop'  # item card locator
     ITEM_TITLE = 'loop__title'
-    ITEM_PRICE = 'loop__buy loop__buy-loop'
-    CONTAINER_LOCATOR_TAG = 'a'
+    ITEM_PRICE = 'loop__price'
+    CONTAINER_LOCATOR_TAG = 'div'
     ITEM_STATUS = 'loop__price loop__price-sold'
