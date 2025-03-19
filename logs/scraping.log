@@ -10,3 +10,10 @@ INFO 2025-03-18 20:22:38,363 tasks Збережено/Оновлено 1 товарів для партнера KTC
 INFO 2025-03-18 20:23:02,509 tasks Збережено/Оновлено 1 товарів для партнера KTC (бренд WACOM).
 INFO 2025-03-18 20:23:47,214 tasks Збережено/Оновлено 1 товарів для партнера KTC (бренд WACOM).
 INFO 2025-03-18 20:23:59,389 tasks Збережено/Оновлено 1 товарів для партнера KTC (бренд WACOM).
+INFO 2025-03-19 19:27:02,387 tasks Помилка парсингу данних Telemart/WACOM object of type 'NoneType' has no len()
+INFO 2025-03-19 19:33:25,844 tasks Не вдалось спарсити данні Telemart/WACOM - None товарів
+INFO 2025-03-19 19:33:26,013 tasks Помилка парсингу данних Telemart/WACOM object of type 'NoneType' has no len()
+INFO 2025-03-19 19:34:37,984 tasks Помилка парсингу данних Telemart/XP-Pen object of type 'NoneType' has no len()
+INFO 2025-03-19 19:37:55,107 tasks Не вдалось спарсити данні Telemart/WACOM - None товарів
+INFO 2025-03-19 19:37:55,349 tasks Помилка парсингу данних Telemart/WACOM object of type 'NoneType' has no len()
+INFO 2025-03-19 19:38:53,293 tasks Збережено/Оновлено 44 товарів для партнера Telemart (бренд WACOM).
