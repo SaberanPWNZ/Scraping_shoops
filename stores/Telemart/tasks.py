@@ -18,7 +18,7 @@ def start_telemart_wacom():
         telemart = Telemart(url=TelemartLocators.WACOM_URL)
         telemart.load_items(container_locator=TelemartLocators.CONTAINER_LOCATOR, pages=2,
                             item_locator=TelemartLocators.ITEM_BOX_LOCATOR, tag=TelemartLocators.CONTAINER_LOCATOR_TAG)
-        items = telemart.generate_info_with_articles(
+        items = telemart._generate_info_with_articles(
             title_locator=TelemartLocators.ITEM_TITLE,
             price_extractor=lambda elem: telemart.extract_price(
                 elem,
@@ -29,11 +29,12 @@ def start_telemart_wacom():
             article_extractor=lambda name: custom_article_extractor(name, TELEMART_ARTICLES_WACOM)
         )
         if not items:
-            logger.info(f"Не вдалось спарсити данні Telemart/WACOM - {len(items)} товарів")
+            logger.info(f"Не вдалось спарсити данні Telemart/WACOM - {items} товарів")
             telemart.send_allert_notification()
-        logger.info(f"Збережено/Оновлено {len(items)} товарів для партнера Telemart (бренд WACOM).")
 
-        telemart.save_parsed_data(partner_name="Telemart", items=items, brand='WACOM')
+        #telemart.save_parsed_data(partner_name="Telemart", items=items, brand='WACOM')
+        logger.info(f"Збережено/Оновлено {len(items)} товарів для партнера Telemart (бренд WACOM).")
+        return items
     except Exception as e:
         logger.info(f"Помилка парсингу данних Telemart/WACOM {e}")
 
@@ -44,7 +45,7 @@ def start_telemart_xp_pen():
         telemart = Telemart(url=TelemartLocators.XP_PEN_URL)
         telemart.load_items(container_locator=TelemartLocators.CONTAINER_LOCATOR, pages=2,
                             item_locator=TelemartLocators.ITEM_BOX_LOCATOR, tag=TelemartLocators.CONTAINER_LOCATOR_TAG)
-        items = telemart.generate_info_with_articles(
+        items = telemart._generate_info_with_articles(
             title_locator=TelemartLocators.ITEM_TITLE,
             price_extractor=lambda elem: telemart.extract_price(
                 elem,
@@ -61,3 +62,5 @@ def start_telemart_xp_pen():
         telemart.save_parsed_data(partner_name="Telemart", items=items, brand='XP-Pen')
     except Exception as e:
         logger.info(f"Помилка парсингу данних Telemart/XP-Pen {e}")
+
+print(start_telemart_wacom())
