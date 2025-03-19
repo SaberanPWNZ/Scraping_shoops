@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+# entrypoint.sh
 
-python manage.py migrate
+python manage.py migrate --noinput
 
 python manage.py collectstatic --noinput
 
-exec python manage.py runserver 0.0.0.0:8000
+exec gunicorn --bind 0.0.0.0:8000 scraper.wsgi:application

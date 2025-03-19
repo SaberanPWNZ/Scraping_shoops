@@ -12,8 +12,8 @@ services:
     volumes:
       - .:/app
       - ./media:/app/media
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     networks:
       - scraping_network
     depends_on:
@@ -88,6 +88,20 @@ services:
         condition: service_healthy
     volumes:
       - .:/app
+    networks:
+      - scraping_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-container
+    restart: always
+    volumes:
+      - .:/app
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - django
     networks:
       - scraping_network
 
