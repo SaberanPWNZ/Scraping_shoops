@@ -95,9 +95,6 @@ services:
     image: nginx:alpine
     container_name: nginx-container
     restart: always
-    volumes:
-      - .:/app
-      - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"
     depends_on:

@@ -24,6 +24,4 @@ jobs:
         rm: true
         script: |
           git pull origin main  # Обновляем репозиторий с кодом
-          docker-compose down   # Останавливаем текущие контейнеры
-          docker-compose pull   # Загружаем новые образы (если изменились)
-          docker-compose up -d 
+          docker compose up -d --build
