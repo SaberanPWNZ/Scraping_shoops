@@ -23,8 +23,6 @@ COPY . /app
 ENV PYTHONPATH="${PYTHONPATH}:/app"
 
 
-COPY ./app /app
-
 EXPOSE 8000
 
 ENTRYPOINT ["sh", "/app/entrypoint.sh"]
