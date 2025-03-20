@@ -28,7 +28,7 @@ COPY . /app
 
 ENV PYTHONPATH="${PYTHONPATH}:/app"
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 
 EXPOSE 8000
