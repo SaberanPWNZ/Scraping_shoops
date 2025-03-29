@@ -1,0 +1,123 @@
+WARNING 2025-03-29 10:32:29,488 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:32:29,488 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:32:29,488 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:32:30,092 basehttp "GET /favicon.ico HTTP/1.1" 404 179
+WARNING 2025-03-29 10:35:50,839 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:35:50,839 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:35:50,840 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:35:50,841 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:35:50,841 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:35:50,841 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:35:58,420 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:35:58,421 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:35:58,421 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:35:58,422 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:35:58,422 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:35:58,423 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:00,376 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:36:00,376 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:00,383 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:36:00,384 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:36:00,385 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:00,385 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+ERROR 2025-03-29 10:36:01,629 log Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: œŒÃ»À ¿:  ‚≥‰ÌÓ¯ÂÌÌˇ "items_item" ÌÂ ≥ÒÌÛ∫
+LINE 1: ...tems_item"."ean", "items_item"."category_id" FROM "items_ite...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\Scraping_shoops\checker\views.py", line 35, in dashboard_view
+    for item in items:
+                ^^^^^
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\models\query.py", line 400, in __iter__
+    self._fetch_all()
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1574, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Saberan\PycharmProjects\pythonProject\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: œŒÃ»À ¿:  ‚≥‰ÌÓ¯ÂÌÌˇ "items_item" ÌÂ ≥ÒÌÛ∫
+LINE 1: ...tems_item"."ean", "items_item"."category_id" FROM "items_ite...
+                                                             ^
+
+ERROR 2025-03-29 10:36:01,636 basehttp "GET /dashboard/ HTTP/1.1" 500 145
+WARNING 2025-03-29 10:36:29,341 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:36:29,342 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:36:29,343 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:36:29,343 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:29,344 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:29,344 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:32,981 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:36:32,982 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:36:32,983 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:36:32,983 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:32,984 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:32,984 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:34,313 log Not Found: /static/css/index.css
+WARNING 2025-03-29 10:36:34,314 basehttp "GET /static/css/index.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:34,317 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:36:34,317 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:36:34,319 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:36:34,319 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:34,321 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:34,321 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:36,283 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:36:36,283 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:36,287 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:36:36,288 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:36:36,288 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:36:36,289 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:37:15,585 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:37:15,587 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:37:15,587 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:37:15,588 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:37:15,588 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:37:15,589 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:37:22,493 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:37:22,494 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:37:22,494 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:37:22,495 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:37:43,471 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:37:43,472 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:37:43,475 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:37:43,476 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:37:43,476 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:37:43,476 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:39:40,018 log Not Found: /static/css/styles.css
+WARNING 2025-03-29 10:39:40,019 basehttp "GET /static/css/styles.css HTTP/1.1" 404 179
+WARNING 2025-03-29 10:39:40,021 log Not Found: /static/css/login.css
+WARNING 2025-03-29 10:39:40,022 log Not Found: /static/images/logo.png
+WARNING 2025-03-29 10:39:40,022 basehttp "GET /static/images/logo.png HTTP/1.1" 404 179
+WARNING 2025-03-29 10:39:40,022 basehttp "GET /static/css/login.css HTTP/1.1" 404 179
+WARNING 2025-03-29 15:05:58,330 log Not Found: /favicon.ico
+WARNING 2025-03-29 15:05:58,330 basehttp "GET /favicon.ico HTTP/1.1" 404 3368

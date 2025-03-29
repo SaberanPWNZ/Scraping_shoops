@@ -35,3 +35,5 @@ def shedule_updating_db_xp_pen():
         update_database(cleared_data)
     except Exception as ex:
         logger.error(F'не вдалось оновити БД - {ex}')
+
+
