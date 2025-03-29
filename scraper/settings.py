@@ -173,6 +173,7 @@ LOGGING = {
         },
     },
     'handlers': {
+
         'django_file': {
             'level': 'WARNING',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -181,12 +182,73 @@ LOGGING = {
             'backupCount': 5,
             'formatter': 'verbose',
         },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+
+
+        'django_request_file': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/django_requests.log'),
+            'maxBytes': 5 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+
+
+        'django_error_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/django_errors.log'),
+            'maxBytes': 5 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+
+
+        'items_console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+
+        'scraping_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/scraping.log'),
+            'maxBytes': 5 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['django_file'],
-            'level': 'WARNING',
+            'handlers': ['django_file', 'console'],
+            'level': 'DEBUG',
             'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['django_request_file'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'django.error': {
+            'handlers': ['django_error_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'items': {
+            'handlers': ['items_console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'scraping': {
+            'handlers': ['scraping_file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
         },
     },
 }
