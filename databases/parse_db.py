@@ -108,3 +108,4 @@ class GoogleSheet:
             raise error
         logger.info(f'Обработано {len(items)} элементов')
         return items
+
