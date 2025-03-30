@@ -97,8 +97,8 @@ class GoogleSheet:
                                 'partner_price': _clean_price(
                                     partner_price_raw) if 'підзапит' not in partner_price_raw else 0.0,
                                 'rrp_price': _clean_price(rrp_price_raw) if 'підзапит' not in rrp_price_raw else 0.0,
-                                'warranty': item[elem_positions['warranty']],
-                                'ean': item[elem_positions['ean']],
+                                'warranty': item[5],
+                                'ean': item[6],
                             }
                             items.append(clear_data)
                         except Exception as e:
