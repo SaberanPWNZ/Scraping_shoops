@@ -47,9 +47,9 @@ class Item(models.Model):
         null=True)
     partner_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.0)
     rrp_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=0.0)
-    warranty = models.ForeignKey(Warranty, on_delete=models.CASCADE)
+    warranty = models.ForeignKey(Warranty, on_delete=models.CASCADE, null=True, blank=True)
     ean = models.CharField(max_length=50, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
 
 
     class Meta:
