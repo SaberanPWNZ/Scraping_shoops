@@ -5,9 +5,13 @@
 {% block title %}Дашборд партнерів{% endblock %}
 
 {% block content %}
-    <h2>Порівняльна таблиця</h2>
 
-    <table class="table table-bordered table-striped">
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Пошук товару...">
+
+    </div>
+
+    <table class="table table-bordered table-striped" id="comparisonTable">
         <thead>
             <tr>
                 <th>Назва товару</th>
@@ -19,7 +23,7 @@
         <tbody>
             {% for item in items %}
                 <tr>
-                    <td>{{ item.title }}</td>
+                    <td class="item-title">{{ item.title }}</td>
                     {% for partner in partners %}
                         <td>
                             {% with comparison_data|get_item:item.article as item_prices %}
@@ -37,4 +41,16 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <script>
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            let filter = this.value.toLowerCase();
+            let rows = document.querySelectorAll("#comparisonTable tbody tr");
+
+            rows.forEach(row => {
+                let title = row.querySelector(".item-title").textContent.toLowerCase();
+                row.style.display = title.includes(filter) ? "" : "none";
+            });
+        });
+    </script>
 {% endblock %}
