@@ -23,5 +23,6 @@ jobs:
         port: 22
         rm: true
         script: |
+          git stash save "temp changes before pull" || echo "Nothing to stash"
           git pull origin main  # Обновляем репозиторий с кодом
           docker compose up -d --build
