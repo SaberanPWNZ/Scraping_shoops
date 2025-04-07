@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from checker.models import Partner
+from checker.models import Partner, PriceHistory
 from items.models import Brand
 
 
@@ -13,5 +13,10 @@ class AdminBrand(admin.ModelAdmin):
     list_display = ['name']
 
 
+class AdminPriceHistory(admin.ModelAdmin):
+    list_display = ['partner_item', 'price']
+
+
+admin.site.register(PriceHistory, AdminPriceHistory)
 admin.site.register(Partner, AdminPartner)
 admin.site.register(Brand, AdminBrand)

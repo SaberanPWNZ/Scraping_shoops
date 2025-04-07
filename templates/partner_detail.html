@@ -5,11 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if not user.is_staff %}
-        <div class="alert alert-danger" role="alert">
-            Доступ до цієї сторінки закритий. Ви повинні бути частиною команди Новелла для перегляду цієї інформації.
-        </div>
-    {% else %}
+    {% if user.is_staff %}
         <div>
             <strong>Сайт:</strong> <a href="{{ partner.website }}" target="_blank">{{ partner.website }}</a>
         </div>
@@ -41,7 +37,7 @@
                                 {% if entry.scraped_item.price == entry.matching_item.rrp_price %}
                                     <span style="color: green;">{{ entry.scraped_item.price }}</span>
                                 {% elif entry.scraped_item.price < entry.matching_item.rrp_price %}
-                                    <span style="color: yellow;">{{ entry.scraped_item.price }}</span>
+                                    <span style="color: orange;">{{ entry.scraped_item.price }}</span>
                                 {% else %}
                                     <span style="color: red;">{{ entry.scraped_item.price }}</span>
                                 {% endif %}
@@ -56,13 +52,17 @@
                                 N/A
                             {% endif %}
                         </td>
-                        <td>{{ entry.scraped_item.status }}</td>
+                        <td>{{ entry.partner_item_status }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
 
         <button onclick="scrollToTop()" class="scroll-to-top-btn">↑ Повернутися вгору</button>
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+            Доступ до цієї сторінки закритий. Ви повинні бути частиною команди Новелла для перегляду цієї інформації.
+        </div>
     {% endif %}
 {% endblock %}
 

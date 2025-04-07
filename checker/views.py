@@ -2,14 +2,11 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Max, Q
-from rest_framework import status
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db import models
-from rest_framework.response import Response
-from rest_framework.views import APIView
+
 
 from checker.models import Partner, PartnerItem
-from items.models import Item, Brand
+from items.models import Item
 from users.forms import UserRegistrationForm, UserChangeProfile
 from django import template
 
@@ -97,12 +94,11 @@ def profile_edit_view(request):
 
 def partner_detail(request, slug):
     partner = get_object_or_404(Partner, slug=slug)
-
     partner_items = PartnerItem.objects.filter(partner=partner)
-
     last_prices = {}
 
     for partner_item in partner_items:
+        #print(partner_item)
         scraped_item_article = partner_item.article
         matching_item = Item.objects.filter(article=scraped_item_article).first()
 
@@ -113,6 +109,7 @@ def partner_detail(request, slug):
                 'price': partner_item.price,
                 'date': partner_item.last_updated,
                 'matching_item': matching_item,
+                'partner_item_status': partner_item.status,
             }
 
     comparison_data = list(last_prices.values())
