@@ -31,14 +31,14 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute=cron_time_delicate)
     }
     ,
-    'start_ktc_wacom_every_hour': {
-        'task': 'stores.KTC.tasks.start_ktc_wacom',
-        'schedule': crontab(minute=cron_time_default),
-    },
-    'start_ktc_xp_pen_every_hour': {
-        'task': 'stores.KTC.tasks.start_ktc_xp_pen',
-        'schedule': crontab(minute=cron_time_default),
-    },
+    # 'start_ktc_wacom_every_hour': {
+    #     'task': 'stores.KTC.tasks.start_ktc_wacom',
+    #     'schedule': crontab(minute=cron_time_default),
+    # },
+    # 'start_ktc_xp_pen_every_hour': {
+    #     'task': 'stores.KTC.tasks.start_ktc_xp_pen',
+    #     'schedule': crontab(minute=cron_time_default),
+    # },
 
     'start_auchan_wacom': {
         'task': 'stores.Auchan.tasks.start_auchan_wacom',
