@@ -6,6 +6,7 @@
 
 {% block content %}
 
+
     <div class="mb-3">
         <input type="text" id="searchInput" class="form-control" placeholder="Пошук товару...">
     </div>
@@ -37,6 +38,41 @@
                     </td>
                 {% endfor %}
             </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td class="item-title">{{ item.title }}</td>
+                    {% for partner in partners %}
+                        <td>
+                            {% with comparison_data|get_item:item.article as item_prices %}
+                                {% with item_prices|get_item:partner.id as price %}
+                                    {% if price %}
+                                        {{ price }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                {% endwith %}
+                            {% endwith %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            let filter = this.value.toLowerCase();
+            let rows = document.querySelectorAll("#comparisonTable tbody tr");
+
+            rows.forEach(row => {
+                let title = row.querySelector(".item-title").textContent.toLowerCase();
+                row.style.display = title.includes(filter) ? "" : "none";
+            });
+        });
+    </script>
+=======
         {% endfor %}
     </tbody>
     </table>
@@ -79,6 +115,5 @@
             this.classList.add(isAscending ? "desc" : "asc");
         });
     });
-    </script>
 
 {% endblock %}
