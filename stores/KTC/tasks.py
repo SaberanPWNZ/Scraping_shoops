@@ -1,6 +1,7 @@
 
 import django
 import os
+
 os.environ["DJANGO_SETTINGS_MODULE"] = "scraper.settings"
 django.setup()
 
@@ -63,3 +64,4 @@ def start_ktc_xp_pen():
         logger.info(f"Помилка парсингу данних KTC/XP-Pen {e}")
 
 
+print(start_ktc_xp_pen())
