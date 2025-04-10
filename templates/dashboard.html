@@ -1,26 +1,20 @@
 {% extends "base.html" %}
+
 {% load custom_filters %}
 
 {% block title %}Дашборд партнерів{% endblock %}
 
 {% block content %}
-<div class="mb-3">
-    <input type="text" id="searchInput" class="form-control" placeholder="Пошук товару...">
-</div>
 
-<<<<<<< HEAD
+
     <div class="mb-3">
         <input type="text" id="searchInput" class="form-control" placeholder="Пошук товару...">
     </div>
 
     <table class="table table-bordered table-striped" id="comparisonTable">
-        <thead>
-=======
-<table class="table table-bordered table-striped" id="comparisonTable">
     <thead>
         <tr>
             <th class="sortable" data-column="0">Назва товару</th>
-            <th class="sortable" data-column="1">Категорія</th>
             {% for partner in partners %}
                 <th class="sortable" data-column="{{ forloop.counter|add:'1' }}">{{ partner.name }}</th>
             {% endfor %}
@@ -28,10 +22,8 @@
     </thead>
     <tbody>
         {% for item in items %}
->>>>>>> 6d8d2dac7943ace0f21c3242f51b76fc89658b15
             <tr>
                 <td class="item-title">{{ item.article }}</td>
-                <td class="item-category">{{ item.category.name }}</td>
                 {% for partner in partners %}
                     <td>
                         {% with comparison_data|get_item:item.article as item_prices %}
@@ -46,7 +38,6 @@
                     </td>
                 {% endfor %}
             </tr>
-<<<<<<< HEAD
         </thead>
         <tbody>
             {% for item in items %}
@@ -84,41 +75,19 @@
 =======
         {% endfor %}
     </tbody>
-</table>
+    </table>
 
-<style>
-    .sortable {
-        cursor: pointer;
-    }
-
-    .sortable::after {
-        content: " ⇅";
-        font-size: 0.8em;
-        color: gray;
-    }
-
-    .sortable.asc::after {
-        content: " ↑";
-    }
-
-    .sortable.desc::after {
-        content: " ↓";
-    }
-</style>
-
-<script>
-    // Фильтр по названию товара
-    document.getElementById("searchInput").addEventListener("keyup", function () {
-        const filter = this.value.toLowerCase();
-        const rows = document.querySelectorAll("#comparisonTable tbody tr");
+    <script>
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#comparisonTable tbody tr");
 
         rows.forEach(row => {
-            const title = row.querySelector(".item-title").textContent.toLowerCase();
+            let title = row.querySelector(".item-title").textContent.toLowerCase();
             row.style.display = title.includes(filter) ? "" : "none";
         });
     });
 
-    // Сортировка по столбцам
     document.querySelectorAll(".sortable").forEach(header => {
         header.addEventListener("click", function () {
             const table = document.getElementById("comparisonTable");
@@ -131,24 +100,20 @@
                 const cellA = a.children[columnIndex].innerText.trim();
                 const cellB = b.children[columnIndex].innerText.trim();
 
-                // Попытка преобразовать в число, если не выходит — оставить строкой
-                const valA = isNaN(cellA.replace(",", ".")) ? cellA.toLowerCase() : parseFloat(cellA.replace(",", "."));
-                const valB = isNaN(cellB.replace(",", ".")) ? cellB.toLowerCase() : parseFloat(cellB.replace(",", "."));
+                const valA = parseFloat(cellA.replace(",", ".")) || cellA.toLowerCase();
+                const valB = parseFloat(cellB.replace(",", ".")) || cellB.toLowerCase();
 
                 if (valA < valB) return isAscending ? 1 : -1;
                 if (valA > valB) return isAscending ? -1 : 1;
                 return 0;
             });
 
-            // Перерисовка таблицы
             tbody.innerHTML = "";
             rows.forEach(row => tbody.appendChild(row));
 
-            // Обновление направления сортировки
             document.querySelectorAll(".sortable").forEach(h => h.classList.remove("asc", "desc"));
             this.classList.add(isAscending ? "desc" : "asc");
         });
     });
-</script>
->>>>>>> 6d8d2dac7943ace0f21c3242f51b76fc89658b15
+
 {% endblock %}

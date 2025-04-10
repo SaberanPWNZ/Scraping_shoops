@@ -1,6 +1,7 @@
 
 import django
 import os
+
 os.environ["DJANGO_SETTINGS_MODULE"] = "scraper.settings"
 django.setup()
 
@@ -9,24 +10,18 @@ from stores.KTC.ktc_info import KTC_ARTICLES
 from stores.KTC.ktc_model import KtcStore
 from stores.KTC.locators import KtcLocator
 from utillities import custom_article_extractor
-
+from ktc_info import KTC_ARTICLES
 import logging
 
 
 logger = logging.getLogger('scraping')
 
-@app.task()
+#@app.task()
 def start_ktc_wacom():
     try:
         ktc = KtcStore(url=KtcLocator.WACOM_PAGE_URL)
         ktc.load_items(container_locator=KtcLocator.CATALOG_GOODS, item_locator=KtcLocator.ITEM_LOOP, pages=2)
-        items = ktc._generate_info_with_articles(
-            title_locator=KtcLocator.ITEM_TITLE,
-            price_extractor=lambda elem: ktc.extract_price(elem, locator=KtcLocator.ITEM_PRICE,
-                                                           tag=KtcLocator.CONTAINER_LOCATOR_TAG),
-            price_locator=KtcLocator.ITEM_PRICE,
-            status_locator=KtcLocator.ITEM_STATUS,
-            article_extractor=lambda name: custom_article_extractor(name, KTC_ARTICLES)),
+        items = ktc.generate_info_xp_pen(partner_dict=KTC_ARTICLES)
         if not items:
             logger.info(f"Не вдалось спарсити данні KTC/WACOM - {len(items)} товарів")
             ktc.send_allert_notification()
@@ -39,19 +34,12 @@ def start_ktc_wacom():
 
 
 
-@app.task()
+#@app.task()
 def start_ktc_xp_pen():
     try:
         ktc = KtcStore(url=KtcLocator.XP_PEN_PAGE_URL)
         ktc.load_items(container_locator=KtcLocator.CATALOG_GOODS, item_locator=KtcLocator.ITEM_LOOP, pages=2)
-        items = ktc._generate_info_with_articles(
-            price_extractor=lambda elem: ktc.extract_price(elem, locator=KtcLocator.ITEM_PRICE,
-                                                           tag=KtcLocator.CONTAINER_LOCATOR_TAG),
-            title_locator=KtcLocator.ITEM_TITLE,
-            price_locator=KtcLocator.ITEM_PRICE,
-            status_locator=KtcLocator.ITEM_STATUS,
-            article_extractor=lambda name: custom_article_extractor(name, KTC_ARTICLES)
-        )
+        items = ktc.generate_info_xp_pen(partner_dict=KTC_ARTICLES)
         if not items:
             logger.info(f"Не вдалось спарсити данні KTC/XP-Pen - {len(items)} товарів")
             ktc.send_allert_notification()
@@ -61,5 +49,4 @@ def start_ktc_xp_pen():
 
     except Exception as e:
         logger.info(f"Помилка парсингу данних KTC/XP-Pen {e}")
-
 
